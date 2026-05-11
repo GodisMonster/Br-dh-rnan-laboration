@@ -10,31 +10,31 @@ namespace Brädhörnan_laboration.Models;
 
 public class GameMeeting
 {
-    public int GameMeetingId { get; private set; }
+    public int GameMeetingId { get; set; }
     public DateTime DateAndTime { get; set; }
     public string Location { get; set; } = "";
-    public int MaximumNumberOfParticipants { get; private set; }
+    public int MaximumNumberOfParticipants { get; set; }
     public MemberRoleEnum Responsible { get; set; }
 
     public EventTypeEnum EventType { get; set; }
 
     public string Information { get; set; } = "";
 
-    public List<Member> Participants { get; private set; } = new();
+    public List<Member> Participants { get;  set; } = new();
 
-    public List<Game> PlannedGames { get; private set; } = new();
+    public List<Game> PlannedGames { get;  set; } = new();
 
     public GameMeeting(int gameMeetingId, DateTime dateAndTime, string location,
-                        int maximumNumberOfParticipants, EventTypeEnum eventType)
+                        int maximumNumberOfParticipants, EventTypeEnum eventType) // Parametrar i konstruktorn
     {
         if (string.IsNullOrWhiteSpace(location))
-            throw new ArgumentException("Location cannot be empty");
+            throw new ArgumentException("Mötesplats kan inte vara tomt");
 
         if (maximumNumberOfParticipants < 1)
-            throw new ArgumentException("Must allow at least 1 participant");
+            throw new ArgumentException("Måste vara minst en deltagare");
 
         if (dateAndTime < DateTime.Now)
-            throw new ArgumentException("Cannot create meeting in the past");
+            throw new ArgumentException("Kan inte skapa möten bakåt i tiden");
 
         GameMeetingId = gameMeetingId;
         DateAndTime = dateAndTime;

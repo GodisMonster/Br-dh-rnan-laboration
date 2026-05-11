@@ -12,7 +12,7 @@ public class GameMeetingManager
     private List<GameMeeting> _meetings = new();
     private int _nextMeetingId = 1;
 
-    // Use Case 2: Skapa ny spelträff
+    // Use Case 2 för att skapa ny spelträff
     public GameMeeting CreateGameMeeting(DateTime dateAndTime, string location,
                                           int maxParticipants, EventTypeEnum eventType)
     {

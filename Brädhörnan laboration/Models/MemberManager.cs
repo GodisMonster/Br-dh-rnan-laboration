@@ -10,7 +10,7 @@ namespace Brädspelsföreningen.Services;
 
 public class MemberManager
 {
-    private List<Member> _members = new();
+    private List<Member> _members = new List<Member>();
     private int _nextMemberNumber = 1;
 
     // Use Case 1: Registrera ny medlem
