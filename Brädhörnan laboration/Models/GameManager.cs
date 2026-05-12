@@ -10,19 +10,34 @@ namespace Brädhörnan_laboration.Models
 {
     public class GameManager
     {
-        private List<Game> _games = new List<Game>();
+        private readonly List<Game> _games = new List<Game>();
+
         private int _nextGameId = 1;
 
-        public Game AddGame(string gameName, int minPlayers, int maxPlayers)
+        public Game AddGame(
+         string gameName,
+         int minPlayers,
+         int maxPlayers,
+         int averageGameLength)
         {
-            int gameID = _nextGameId++;
-            var game = new Game(gameID, gameName, minPlayers, maxPlayers);
+            var game = new Game(
+                _nextGameId++,
+                gameName,
+                minPlayers,
+                maxPlayers,
+                averageGameLength);
+
             _games.Add(game);
+
             return game;
         }
         public IEnumerable<Game> GetAllGames()
         {
             return _games.ToList();
+        }
+        public Game? GetGameById(int gameId)
+        {
+            return _games.FirstOrDefault(g => g.GameId == gameId);
         }
         public IEnumerable<Game> GetAvailableGames()
         {
@@ -40,18 +55,14 @@ namespace Brädhörnan_laboration.Models
         {
             return _games.GroupBy(g => g.Gamegenre);
         }
-        public Game? GetGameById(int gameID)
+        
+        public bool RemoveGame(int gameId)
         {
-            return _games.FirstOrDefault(g => g.GameId == gameID);
-        }
-        public bool RemoveGame(int gameID)
-        {
-            var game = GetGameById(gameID);
-            if (game != null)
-            {
-                return _games.Remove(game);
-            }
-            return false;
+            var game = GetGameById(gameId);
+            
+            return game != null && _games.Remove(game);
+            
+          
         }
 
     }
