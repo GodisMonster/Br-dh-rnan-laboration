@@ -19,7 +19,7 @@ namespace Brädhörnan_laboration
             InitializeComponent();
 
            
-            DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
+          //  DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
             RollComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberRoleEnum));
 
         }
