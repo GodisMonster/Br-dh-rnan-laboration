@@ -20,14 +20,22 @@ public class Member
     public string LastName { get; private set; }
     public string Email { get; private set; }
     public string Phone { get; private set; }
-    public DateTime RegistrationDate { get; private set; }
+    public DateTime RegistrationDate { get; init; } // Borde inte kunna ändras alls?
     public MemberRoleEnum Role { get; private set; }
     public MemberStatusEnum Status { get; private set; }
 
-    public Member(int memberNumber, string firstName, string lastName, string email, string phone = "")
+    public Member(
+        int memberNumber,
+        string firstName,
+        string lastName,
+        string email,
+        string phone = "")
     {
 
-        if (memberNumber <= 0) throw new ArgumentOutOfRangeException(nameof(memberNumber), "Medlemsnummer måste vara positivt");
+        if (memberNumber <= 0) 
+            throw new ArgumentOutOfRangeException(
+                nameof(memberNumber),
+                "Medlemsnummer måste vara positivt");
 
         MemberNumber = memberNumber;
 
@@ -44,28 +52,41 @@ public class Member
     private string ValidateName(string value, string paramName)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentNullException(paramName, "Får inte vara tom");
+            throw new ArgumentNullException(paramName,
+                "Får inte vara tom");
 
         value = value.Trim();
 
-        if (value.Length < NameMinLength || value.Length > NameMaxLength)
-            throw new ArgumentOutOfRangeException(paramName, $"Namn måste vara {NameMinLength}-{NameMaxLength} tecken.");
+        if (value.Length < NameMinLength ||
+            value.Length > NameMaxLength)
+        {
+            throw new ArgumentOutOfRangeException(
+                paramName,
+                $"Namn måste vara {NameMinLength}-{NameMaxLength} tecken.");  
+        }
         return value;
     }
     private string ValidateEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentNullException(nameof(email), "Får inte vara tom");
+            throw new ArgumentNullException(nameof(email),
+                "Får inte vara tom");
 
-                email = email.Trim();
+        email = email.Trim();
 
         if (email.Length > EmailMaxLength)
-            throw new ArgumentOutOfRangeException(nameof(email), "Email är för lång");
+            throw new ArgumentOutOfRangeException(
+                nameof(email),
+                "Email är för lång");
 
-        if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (!Regex.IsMatch(
+            email,
+            @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
 
-            throw new ArgumentException($"Email-adressen '{email}' har ogiltigt format.", nameof(email));
+            throw new ArgumentException(
+                $"Email-adressen '{email}' har ogiltigt format.",
+                nameof(email));
         }
         return email;  
     }
@@ -77,14 +98,20 @@ public class Member
         phone = Regex.Replace(phone, @"[^\d+() -]", "").Trim();
 
         if (phone.Length > PhoneMaxLength)
-            throw new ArgumentOutOfRangeException(nameof(phone), $"Telefonnummer får max vara {PhoneMaxLength} tecken.");
+            throw new ArgumentOutOfRangeException(
+                nameof(phone),
+                $"Telefonnummer får max vara {PhoneMaxLength} tecken.");
 
         if (phone.Length < 8)  
-            throw new ArgumentOutOfRangeException(nameof(phone), "Telefonnummer måste ha minst 8 siffror.");
+            throw new ArgumentOutOfRangeException(
+                nameof(phone),
+                "Telefonnummer måste ha minst 8 siffror.");
 
-     
         return phone;
     }
-
+    public override string ToString()
+    {
+        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn: {FirstName} Efternamn: {LastName} Status: ({Status}) Roll{Role}";
+    }
 
 }

@@ -10,17 +10,23 @@ namespace Brädhörnan_laboration.Services;
 
 public class MemberManager
 {
-    private List<Member> _members = new List<Member>();
+    private readonly List<Member> _members = new List<Member>(); // varför ska den vara readonly?
+
     private int _nextMemberNumber = 1;
-
-
-    public Member RegisterNewMember(string firstName, string lastName, string email, string phone = "")
+    public Member RegisterNewMember(
+        string firstName,
+        string lastName,
+        string email,
+        string phone = "")
     {
 
-        int memberNumber = _nextMemberNumber++;
+        var member = new Member(
+            _nextMemberNumber++,
+            firstName,
+            lastName,
+            email,
+            phone);
 
-
-        var member = new Member(memberNumber, firstName, lastName, email, phone);
         _members.Add(member);
 
         return member;
@@ -50,14 +56,14 @@ public class MemberManager
     }
 
 
-    public Member? GetMemberByNumber(int memberNumber)
+    public Member? GetMemberByMemberNumber(int memberNumber)
     {
         return _members.FirstOrDefault(m => m.MemberNumber == memberNumber);
     }
 
     public bool RemoveMember(int memberNumber)
     {
-        var member = GetMemberByNumber(memberNumber);
+        var member = GetMemberByMemberNumber(memberNumber);
         if (member != null)
         {
             return _members.Remove(member);

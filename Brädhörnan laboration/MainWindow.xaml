@@ -3,13 +3,205 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Brädhörnan_laboration"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <ListView>
-        <TextBlock> "Game"</TextBlock>
-        <Button x:Name="Gamebutton" Content="Game Button" Click="Gamebutton_Click"/>
-        <Button x:Name="Memberbutton" Content="Member Button" Click="Memberbutton_Click"/>
+        Title="Laboration 1 - Objektorienterad programmering i C#" Height="600" Width="900">
 
-    </ListView>
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titel -->
+        <TextBlock Text="Spelförening: Brädhörnan"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Margin="0,0,0,0"/>
+
+        <!-- Tabs -->
+        <TabControl Grid.Row="1">
+
+            <!-- SPEL -->
+            <TabItem Header="Spelbibliotek">
+
+                <Grid Margin="10">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Lista med spel -->
+                    <ListBox x:Name="GamesListBox"
+                 Grid.Column="0"
+                 Margin="0,0,10,0"
+                 SelectionChanged = "GamesListBox_SelectionChanged"/>
+                    
+                    <!-- DETALJER -->
+                    <StackPanel Grid.Column="1"
+                    Margin="0,0,10,0">
+
+                        <TextBlock Text="Spelinformation"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Margin="0,0,0,20"/>
+
+                        <TextBlock Text="Namn:" FontWeight="Bold"/>
+                        <TextBlock x:Name="GameNameDetails"
+                       Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Spelare:" FontWeight="Bold"/>
+                        <TextBlock x:Name="PlayerCountDetails"
+                       Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Speltid:" FontWeight="Bold"/>
+                        <TextBlock x:Name="GameLengthDetails"
+                       Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Svårighetsgrad"/>
+                        <ComboBox x:Name="DifficultyComboBox"
+                                       Margin="0,0,0,10"/>
+                        <TextBlock Text="Genre:" FontWeight="Bold"/>
+                        <TextBlock x:Name="GenreDetails"
+                       Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Status:" FontWeight="Bold"/>
+                        <TextBlock x:Name="AvailabilityDetails"
+                       Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Beskrivning:" FontWeight="Bold"/>
+                        <TextBlock x:Name="DescriptionDetails"
+                       TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Formulär -->
+                    <StackPanel Grid.Column="2">
+
+                        <TextBlock Text="Lägg till spel"
+                                   FontSize="1"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Spelnamn"/>
+                        <TextBox x:Name="GameNameTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Min spelare"/>
+                        <TextBox x:Name="MinPlayersTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Max spelare"/>
+                        <TextBox x:Name="MaxPlayersTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Speltid (min)"/>
+                        <TextBox x:Name="GameLengthTextBox"
+                                 Margin="0,0,0,20"/>
+
+                        <Button x:Name="AddGameButton"
+                                Content="Lägg till spel"
+                                Height="35"
+                                Click="AddGameButton_Click"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </TabItem>
+
+            <!-- MEDLEMMAR -->
+            <TabItem Header="Medlemmar">
+
+                <Grid Margin="10">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3.5*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Medlemslista -->
+                    <ListBox x:Name="MembersListBox"
+                             Grid.Column="0"
+                             Margin="0,0,10,0"/>
+
+                    <!-- Form -->
+                    <StackPanel Grid.Column="1">
+
+                        <TextBlock Text="Ny medlem"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Förnamn"/>
+                        <TextBox x:Name="FirstNameTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Efternamn"/>
+                        <TextBox x:Name="LastNameTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Email"/>
+                        <TextBox x:Name="EmailTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Telefon"/>
+                        <TextBox x:Name="PhoneTextBox"
+                                 Margin="0,0,0,20"/>
+
+                        <Button Content="Registrera medlem"
+                                Height="35"
+                                Click="AddMemberButton_Click"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </TabItem>
+
+            <!-- SPELTRÄFFAR -->
+            <TabItem Header="Spelträffar">
+
+                <Grid Margin="10">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Lista -->
+                    <ListBox x:Name="MeetingsListBox"
+                             Grid.Column="0"
+                             Margin="0,0,10,0"/>
+
+                    <!-- Form -->
+                    <StackPanel Grid.Column="1">
+
+                        <TextBlock Text="Skapa spelträff"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Plats"/>
+                        <TextBox x:Name="LocationTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Max deltagare"/>
+                        <TextBox x:Name="MaxParticipantsTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <Button Content="Skapa träff"
+                                Height="35"
+                                Click="CreateMeetingButton_Click"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </TabItem>
+
+        </TabControl>
+
+    </Grid>
 </Window>

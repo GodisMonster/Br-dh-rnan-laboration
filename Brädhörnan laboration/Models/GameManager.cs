@@ -42,24 +42,8 @@
             public IEnumerable<Game> GetAvailableGames()
             {
                 return _games.Where(g => g.GameAvailability == GameAvailabilityEnum.Available);
-            }
-            public bool ReserveGameForMeeting(int gameId, int meetingId)
-            {
-            var game = GetGameById(gameId);
-            if (game?.IsAvailableForBooking() != true)
-                return false;
-
-            game.MarkAsReserved();
-            return true;
-            }
-
-            public void ReleaseGame(int gameId)
-            {
-            var game = GetGameById(gameId);
-            if (game != null)
-                game.MarkAsAvailable();
-            }
-        public IEnumerable<Game> GetGamesForPlayerCount(int numberOfPlayers)
+            }     
+            public IEnumerable<Game> GetGamesForPlayerCount(int numberOfPlayers)
             {
                 return _games.Where(g => g.IsSuitableForPlayerCount(numberOfPlayers));
             }
@@ -71,8 +55,6 @@
             {
                 return _games.GroupBy(g => g.Gamegenre);
             }
-
-        
             public bool RemoveGame(int gameId)
             {
                 var game = GetGameById(gameId);

@@ -55,21 +55,23 @@ public class Game
     private static void ValidateGameName(string gameName)
     {
         if (string.IsNullOrWhiteSpace(gameName))
-            throw new ArgumentException("Spelnamn kan inte vara tomt",nameof(gameName));
+            throw new ArgumentException(
+                "Spelnamn kan inte vara tomt",nameof(gameName));
 
         gameName = gameName.Trim();
 
         if (gameName.Length < 2 || gameName.Length > 100)
-            throw new ArgumentException("Spelnamn måste vara mellan 2 och 100 tecken");
+            throw new ArgumentException(
+                "Spelnamn måste vara mellan 2 och 100 tecken");
     }
 
     private static void ValidatePlayerCounts(int min, int max)
     {
         if (min < 1)
-            throw new ArgumentOutOfRangeException(nameof(min));
+            throw new ArgumentOutOfRangeException(nameof(min), "Spel måste ha minst 1 spelare.");
 
         if (min > max)
-            throw new ArgumentOutOfRangeException(nameof(max));
+            throw new ArgumentOutOfRangeException(nameof(max), "Ett spel kan inte ha lägre maxantal spelare än minsta antal");
 
         if (max > 16)
             throw new ArgumentOutOfRangeException(nameof(max));

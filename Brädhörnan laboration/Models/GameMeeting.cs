@@ -10,32 +10,41 @@ using System.Threading.Tasks;
 namespace Brädhörnan_laboration.Models;
 
 public class GameMeeting
-{
-    public int GameMeetingId { get; set; }
-    public DateTime DateAndTime { get; set; }
-    public string Location { get; set; } = "";
-    public int MaximumNumberOfParticipants { get; set; }
-    public Member? Responsible { get; set; }
+{   
+    private readonly List<Member> _participants = new();
 
-    public EventTypeEnum EventType { get; set; }
-
-    public string Information { get; set; } = "";
-
-    public List<Member> Participants { get;  set; } = new();
-
-    public List<Game> PlannedGames { get;  set; } = new();
-
-    public GameMeeting(int gameMeetingId, DateTime dateAndTime, string location,
-                        int maximumNumberOfParticipants, EventTypeEnum eventType) 
+    private readonly List<Game> _plannedGames = new();
+    public int GameMeetingId { get; }
+    public DateTime DateAndTime { get; private set; }
+    public string Location { get; private set; } = "";
+    public int MaximumNumberOfParticipants { get; private set; }
+    public Member? Responsible { get; private set; }
+    public EventTypeEnum EventType { get; private set; }
+    public string Information { get; private set; } = "";
+    public IReadOnlyCollection<Game> PlannedGames => _plannedGames.AsReadOnly();
+    public IReadOnlyCollection<Member> Participants => _participants.AsReadOnly();
+    public bool IsFull 
+        => Participants.Count >= MaximumNumberOfParticipants;
+    public int AvailableSpots
+        => MaximumNumberOfParticipants - Participants.Count;
+    public GameMeeting(
+        int gameMeetingId,
+        DateTime dateAndTime,
+        string location,
+        int maximumNumberOfParticipants,
+        EventTypeEnum eventType) 
     {
         if (string.IsNullOrWhiteSpace(location))
-            throw new ArgumentException("Mötesplats kan inte vara tomt");
+            throw new ArgumentException(
+                "Mötesplats kan inte vara tomt");
 
         if (maximumNumberOfParticipants < 1)
-            throw new ArgumentException("Måste vara minst en deltagare");
+            throw new ArgumentException(
+                "Måste vara minst en deltagare");
 
         if (dateAndTime < DateTime.Now)
-            throw new ArgumentException("Kan inte skapa möten bakåt i tiden");
+            throw new ArgumentException(
+                "Kan inte skapa möten bakåt i tiden");
 
         GameMeetingId = gameMeetingId;
         DateAndTime = dateAndTime;
@@ -47,71 +56,63 @@ public class GameMeeting
     {
         Responsible = responsible;
     }
-
     public void AddParticipant(Member member)
     {
-        if (Participants.Count >= MaximumNumberOfParticipants)
-            throw new InvalidOperationException("Meeting is full");
-        if (Participants.Any(m => m.MemberNumber == member.MemberNumber))
-            throw new InvalidOperationException("Member already registered");
+        if (IsFull)
+            throw new InvalidOperationException(
+                "Träffen är fullbokad.");
+        if (IsRegistered(member))
+            throw new InvalidOperationException(
+                "Medlemmen är redan registrerad.");
 
-        Participants.Add(member);
+        _participants.Add(member);
     }
-
     public void RemoveParticipant(Member member)
     {
-        if (!Participants.Remove(member))
-            throw new InvalidOperationException("Member not found in participants");
+        if (!_participants.Remove(member))
+            throw new InvalidOperationException(
+                "Medlemmen är inte anmäld till träffen.");
     }
     public int GetParticipantCount()
     {
-        return Participants.Count;
+        return _participants.Count;
     }
 
     public IEnumerable<string> GetParticipantNames() 
     {
-        
-        {
-            return Participants.Select(m => $"{m.FirstName} {m.LastName}");
-        }
-    }
-    public void ReserveGame(Game game)
-    {
-        if (!game.IsAvailableForBooking())
-            throw new InvalidOperationException($"Spelet '{game.GameName}' är inte tillgänglig för bokning.");
-
-        if (PlannedGames.Any(g => g.GameId == game.GameId))
-            throw new InvalidOperationException("Spelet är redan reserverat för denna träff.");
-               PlannedGames.Add(game);
-    }
-    public void UnreserveGame(Game game)
-    {
-        var plannedGame = PlannedGames.FirstOrDefault(g =>  g.GameId == game.GameId);
-        if (plannedGame == null)
-            throw new InvalidOperationException("Spelet är inte reserverat för denna träff.");
-        PlannedGames.Remove(plannedGame); 
+            return _participants.Select(
+                m => $"{m.FirstName} {m.LastName}");    
     }
     public void AddPlannedGame(Game game)
     {
-        if (PlannedGames.Any(g => g.GameId == game.GameId))
-            throw new InvalidOperationException("Spelet är redan planerat för denna träff.");
-        PlannedGames.Add(game);
+        if (!game.IsAvailableForBooking())
+            throw new InvalidOperationException(
+                $"Spelet '{game.GameName}' är inte tillgänglig för bokning.");
+
+        if (_plannedGames.Any(g => g.GameId == game.GameId))
+            throw new InvalidOperationException(
+                "Spelet är redan reserverat för denna träff.");
+
+               game.MarkAsReserved();
+
+               _plannedGames.Add(game);
     }
     public void RemovePlannedGame(Game game)
     {
-        var plannedGame = PlannedGames.FirstOrDefault(g => g.GameId == game.GameId);
-        if (plannedGame != null)
-            PlannedGames.Remove(plannedGame);
-    }
+        var plannedGame = _plannedGames.FirstOrDefault(g =>  g.GameId == game.GameId);
+        if (plannedGame == null)
+            throw new InvalidOperationException(
+                "Spelet är inte reserverat för denna träff.");
 
+        plannedGame.MarkAsAvailable();
 
+        _plannedGames.Remove(plannedGame); 
+    }  
     public bool IsRegistered(Member member)
     {
-        return Participants.Any(m => m.MemberNumber == member.MemberNumber);
+        return Participants.Any(
+            m => m.MemberNumber == member.MemberNumber);
     }
-
-    public bool IsFull => Participants.Count >= MaximumNumberOfParticipants;
-    public int AvailableSpots => MaximumNumberOfParticipants - Participants.Count;
 }
 
 
