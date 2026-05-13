@@ -1,68 +1,90 @@
 ﻿using Brädhörnan_laboration.Enum;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 
 namespace Brädhörnan_laboration.Models;
 
 public class Member
 {
+    private const int NameMinLength = 2;
+    private const int NameMaxLength = 50;
+    private const int EmailMaxLength = 254;
+    private const int PhoneMaxLength = 20;
+
+
+
     public int MemberNumber { get; private set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
-    public string Phone { get; set; }
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+    public string Email { get; private set; }
+    public string Phone { get; private set; }
     public DateTime RegistrationDate { get; private set; }
-    public MemberRoleEnum Role { get; set; }
-    public MemberStatusEnum Status { get; set; }
+    public MemberRoleEnum Role { get; private set; }
+    public MemberStatusEnum Status { get; private set; }
 
     public Member(int memberNumber, string firstName, string lastName, string email, string phone = "")
     {
 
-        if (string.IsNullOrEmpty(firstName))
-            throw new ArgumentNullException("Får inte vara tom");
-        firstName = firstName.Trim();
-        if (firstName.Length < 2 || firstName.Length > 50)
-            throw new ArgumentException("First must be 2-50 characters.");
-
-
-
-        if (string.IsNullOrEmpty(lastName))
-            throw new ArgumentNullException("Får inte vara tom");
-
-        lastName = lastName.Trim();
-        if (lastName.Length < 2 || lastName.Length > 50)
-            throw new ArgumentException("Last name must be 2-50 characters.");
-
-        if (string.IsNullOrEmpty(email))
-            throw new ArgumentNullException("Får inte vara tom");
-        email = email.Trim();
-        if (email.Length == 0 || email.Length > 254)
-            throw new ArgumentException("Email must be 1-254 characters.");
-
-        if (phone?.Length > 20)
-            throw new ArgumentException("Phone number must be 20 characters or less");
-
-        phone = Regex.Replace(phone ?? "", @"[^\d+() -]", "");
-
-        if (memberNumber <= 0)
-            throw new ArgumentOutOfRangeException(nameof(memberNumber), "Member number must be positive.");
-
+        if (memberNumber <= 0) throw new ArgumentOutOfRangeException(nameof(memberNumber), "Medlemsnummer måste vara positivt");
 
         MemberNumber = memberNumber;
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Phone = phone;
-        RegistrationDate = DateTime.Now;
+
+
+        FirstName = ValidateName(firstName, nameof(firstName));
+        LastName = ValidateName(lastName, nameof(lastName));
+        Email = ValidateEmail(email);
+        Phone = ValidatePhone(phone);
+        RegistrationDate = DateTime.UtcNow;
         Role = MemberRoleEnum.Member;
         Status = MemberStatusEnum.Active;
 
-
     }
+    private string ValidateName(string value, string paramName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentNullException(paramName, "Får inte vara tom");
+
+        value = value.Trim();
+
+        if (value.Length < NameMinLength || value.Length > NameMaxLength)
+            throw new ArgumentOutOfRangeException(paramName, $"Namn måste vara {NameMinLength}-{NameMaxLength} tecken.");
+        return value;
+    }
+    private string ValidateEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentNullException(nameof(email), "Får inte vara tom");
+
+                email = email.Trim();
+
+        if (email.Length > EmailMaxLength)
+            throw new ArgumentOutOfRangeException(nameof(email), "Email är för lång");
+
+        if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        {
+
+            throw new ArgumentException($"Email-adressen '{email}' har ogiltigt format.", nameof(email));
+        }
+        return email;  
+    }
+    private string ValidatePhone(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return "";
+
+        phone = Regex.Replace(phone, @"[^\d+() -]", "").Trim();
+
+        if (phone.Length > PhoneMaxLength)
+            throw new ArgumentOutOfRangeException(nameof(phone), $"Telefonnummer får max vara {PhoneMaxLength} tecken.");
+
+        if (phone.Length < 8)  
+            throw new ArgumentOutOfRangeException(nameof(phone), "Telefonnummer måste ha minst 8 siffror.");
+
+     
+        return phone;
+    }
+
+
 }

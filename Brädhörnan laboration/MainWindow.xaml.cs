@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,5 +21,16 @@ namespace Brädhörnan_laboration
         {
             InitializeComponent();
         }
+
+        private void Gamebutton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Klick!");
+        }
+        private void Memberbutton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Member");
+            
+        }
     }
+
 }

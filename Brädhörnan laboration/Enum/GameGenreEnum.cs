@@ -8,10 +8,12 @@ namespace Brädhörnan_laboration.Enum
 {
     public enum GamegenreEnum
     {
-        Classic = 0,
-        Strategy = 1,
-        Partygame = 2,
-        Cooperative = 3,
-        Family = 4
+        Unknown = 0,
+        Classic = 1,
+        Strategy = 2,
+        Partygame = 3,
+        Cooperative = 4,
+        Family = 5
+
     }
 }

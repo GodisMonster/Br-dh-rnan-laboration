@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:Brädhörnan_laboration"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <ListView>
+        <TextBlock> "Game"</TextBlock>
+        <Button x:Name="Gamebutton" Content="Game Button" Click="Gamebutton_Click"/>
+        <Button x:Name="Memberbutton" Content="Member Button" Click="Memberbutton_Click"/>
 
-    </Grid>
+    </ListView>
 </Window>

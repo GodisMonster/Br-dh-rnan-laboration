@@ -24,7 +24,7 @@ public class Game
 
     public DifficultyLevelEnum DifficultyLevel { get; private set; } = DifficultyLevelEnum.Easy;
 
-    public GamegenreEnum Gamegenre { get; private set; }
+    public GamegenreEnum Gamegenre { get; private set; } = GamegenreEnum.Unknown;
 
     public GameAvailabilityEnum GameAvailability { get; private set; }
         = GameAvailabilityEnum.Available;
@@ -55,7 +55,7 @@ public class Game
     private static void ValidateGameName(string gameName)
     {
         if (string.IsNullOrWhiteSpace(gameName))
-            throw new ArgumentException("Spelnamn kan inte vara tomt");
+            throw new ArgumentException("Spelnamn kan inte vara tomt",nameof(gameName));
 
         gameName = gameName.Trim();
 
@@ -92,7 +92,13 @@ public class Game
 
     public void UpdateDescription(string description)
     {
-        GameDescription = description?.Trim() ?? string.Empty;
+       var trimmed = description?.Trim() ?? string.Empty;
+
+        if (trimmed.Length > 500)
+            throw new ArgumentException(
+                "Spelbeskrivningen får inte vara längre än 500 tecken");
+        GameDescription = trimmed;
+
     }
 
     public void SetDifficulty(DifficultyLevelEnum difficulty)
