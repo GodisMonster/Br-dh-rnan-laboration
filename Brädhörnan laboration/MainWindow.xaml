@@ -28,9 +28,11 @@
                 <Grid Margin="10">
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="1.5*"/>
-                        <ColumnDefinition Width="1*"/>
+                       
+                            <ColumnDefinition Width="3.5*"/>
+                            <ColumnDefinition Width="Auto"/>
+                    
+
                     </Grid.ColumnDefinitions>
 
                     <!-- Lista med spel -->
@@ -40,49 +42,21 @@
                  SelectionChanged = "GamesListBox_SelectionChanged"/>
                     
                     <!-- DETALJER -->
-                    <StackPanel Grid.Column="1"
-                    Margin="0,0,10,0">
+                    
 
-                        <TextBlock Text="Spelinformation"
-                       FontSize="20"
-                       FontWeight="Bold"
-                       Margin="0,0,0,20"/>
 
-                        <TextBlock Text="Namn:" FontWeight="Bold"/>
-                        <TextBlock x:Name="GameNameDetails"
-                       Margin="0,0,0,10"/>
 
-                        <TextBlock Text="Spelare:" FontWeight="Bold"/>
-                        <TextBlock x:Name="PlayerCountDetails"
-                       Margin="0,0,0,10"/>
 
-                        <TextBlock Text="Speltid:" FontWeight="Bold"/>
-                        <TextBlock x:Name="GameLengthDetails"
-                       Margin="0,0,0,10"/>
 
-                        <TextBlock Text="Svårighetsgrad"/>
-                        <ComboBox x:Name="DifficultyComboBox"
-                                       Margin="0,0,0,10"/>
-                        <TextBlock Text="Genre:" FontWeight="Bold"/>
-                        <TextBlock x:Name="GenreDetails"
-                       Margin="0,0,0,10"/>
-
-                        <TextBlock Text="Status:" FontWeight="Bold"/>
-                        <TextBlock x:Name="AvailabilityDetails"
-                       Margin="0,0,0,10"/>
-
-                        <TextBlock Text="Beskrivning:" FontWeight="Bold"/>
-                        <TextBlock x:Name="DescriptionDetails"
-                       TextWrapping="Wrap"/>
-                    </StackPanel>
+                    
 
                     <!-- Formulär -->
                     <StackPanel Grid.Column="2">
 
                         <TextBlock Text="Lägg till spel"
-                                   FontSize="1"
+                                   FontSize="20"
                                    FontWeight="Bold"
-                                   Margin="0,0,0,10"/>
+                                   Margin="200,0,0,0"/>
 
                         <TextBlock Text="Spelnamn"/>
                         <TextBox x:Name="GameNameTextBox"
@@ -130,9 +104,9 @@
                     <StackPanel Grid.Column="1">
 
                         <TextBlock Text="Ny medlem"
-                                   FontSize="18"
+                                   FontSize="20"
                                    FontWeight="Bold"
-                                   Margin="0,0,0,10"/>
+                                   Margin="200,0,0,10"/>
 
                         <TextBlock Text="Förnamn"/>
                         <TextBox x:Name="FirstNameTextBox"
@@ -150,9 +124,20 @@
                         <TextBox x:Name="PhoneTextBox"
                                  Margin="0,0,0,20"/>
 
+                        <TextBlock Text="Roll"/>
+
+                  
+                        <ComboBox x:Name="RollComboBox"
+                         Margin="0,0,0,10"/>
+                        
+                        
+
+
                         <Button Content="Registrera medlem"
                                 Height="35"
                                 Click="AddMemberButton_Click"/>
+                        
+                        
 
                     </StackPanel>
 

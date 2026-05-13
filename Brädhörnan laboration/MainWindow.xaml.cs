@@ -18,14 +18,14 @@ namespace Brädhörnan_laboration
         {
             InitializeComponent();
 
-            // Valfritt: fyller enum i combobox
-            DifficultyComboBox.ItemsSource =
-     System.Enum.GetValues(typeof(DifficultyLevelEnum));
+           
+            DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
+            RollComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberRoleEnum));
+
         }
 
-        // =========================
-        // 🎮 SPEL
-        // =========================
+      
+      
         private void AddGameButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -55,9 +55,7 @@ namespace Brädhörnan_laboration
             }
         }
 
-        // =========================
-        // 👤 MEDLEMMAR
-        // =========================
+      
         private void AddMemberButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -66,7 +64,8 @@ namespace Brädhörnan_laboration
                     FirstNameTextBox.Text,
                     LastNameTextBox.Text,
                     EmailTextBox.Text,
-                    PhoneTextBox.Text);
+                    PhoneTextBox.Text,
+                    RollComboBox.Text);
 
                 MembersListBox.Items.Add(member);
 
@@ -79,25 +78,9 @@ namespace Brädhörnan_laboration
                 MessageBox.Show(ex.Message);
             }
         }
-        private void MembersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (MembersListBox.SelectedItem is Member m)
-            {
-                MessageBox.Show(
-                    "ID: " + m.MemberNumber + "\n" +
-                    "Namn: " + m.FirstName + " - " + m.LastName + "\n" +
-                    "Status: " + m.Status + "\n" +
-                    $"Roll: {m.Role}\n" +
-                    "Registrerad: " + m.RegistrationDate);
-                
-            }
-        }
+  
 
-        
-
-        // =========================
-        // 🏁 SPELTRÄFFAR
-        // =========================
+     
         private void CreateMeetingButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -118,9 +101,7 @@ namespace Brädhörnan_laboration
             }
         }
 
-        // =========================
-        // 🧹 HJÄLP METOD
-        // =========================
+       
         private void ClearMemberInputs()
         {
             FirstNameTextBox.Clear();

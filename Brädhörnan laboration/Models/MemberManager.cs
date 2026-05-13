@@ -17,7 +17,8 @@ public class MemberManager
         string firstName,
         string lastName,
         string email,
-        string phone = "")
+        string phone = "",
+        string roll ="")
     {
 
         var member = new Member(
@@ -25,7 +26,8 @@ public class MemberManager
             firstName,
             lastName,
             email,
-            phone);
+            phone,
+            roll);
 
         _members.Add(member);
 

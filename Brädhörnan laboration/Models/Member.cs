@@ -1,7 +1,9 @@
 ﻿using Brädhörnan_laboration.Enum;
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Markup.Localizer;
 
 
 namespace Brädhörnan_laboration.Models;
@@ -29,7 +31,8 @@ public class Member
         string firstName,
         string lastName,
         string email,
-        string phone = "")
+        string phone = "",
+        string roll= "")
     {
 
         if (memberNumber <= 0) 
@@ -45,7 +48,20 @@ public class Member
         Email = ValidateEmail(email);
         Phone = ValidatePhone(phone);
         RegistrationDate = DateTime.UtcNow;
-        Role = MemberRoleEnum.Member;
+
+        switch (roll)
+        {
+            case "Admin": Role = MemberRoleEnum.Admin; break;
+
+            case "Member": Role = MemberRoleEnum.Member; break;
+
+            case "Organizer": Role = MemberRoleEnum.Organizer; break;
+
+            default:
+                break;
+
+        }
+
         Status = MemberStatusEnum.Active;
 
     }
@@ -111,7 +127,7 @@ public class Member
     }
     public override string ToString()
     {
-        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn: {FirstName} Efternamn: {LastName} Status: ({Status}) Roll{Role}";
+        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn: {FirstName} Efternamn: {LastName} Status: ({Status}) Roll: {Role}";
     }
 
 }
