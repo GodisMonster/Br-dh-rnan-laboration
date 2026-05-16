@@ -32,6 +32,7 @@ public class Member
         string lastName,
         string email,
         string phone = "",
+        string status = "",
         string roll= "")
     {
 
@@ -61,11 +62,15 @@ public class Member
                 break;
 
         }
-
-        Status = MemberStatusEnum.Active;
+        switch (status)
+        {
+            case "Actice": Status = MemberStatusEnum.Active; break;
+            case "Inactive": Status = MemberStatusEnum.Inactive; break;
+        }
+        
 
     }
-    private string ValidateName(string value, string paramName)
+    public string ValidateName(string value, string paramName)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentNullException(paramName,
@@ -82,7 +87,7 @@ public class Member
         }
         return value;
     }
-    private string ValidateEmail(string email)
+    public string ValidateEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentNullException(nameof(email),
@@ -93,7 +98,7 @@ public class Member
         if (email.Length > EmailMaxLength)
             throw new ArgumentOutOfRangeException(
                 nameof(email),
-                "Email är för lång");
+                "Email är för långt");
 
         if (!Regex.IsMatch(
             email,
@@ -106,7 +111,7 @@ public class Member
         }
         return email;  
     }
-    private string ValidatePhone(string phone)
+    public string ValidatePhone(string phone)
     {
         if (string.IsNullOrWhiteSpace(phone))
             return "";
@@ -130,4 +135,27 @@ public class Member
         return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn: {FirstName} Efternamn: {LastName} Status: ({Status}) Roll: {Role}";
     }
 
+    public void UpdateName(string firstName, string lastName)
+    {
+        firstName = ValidateName(firstName, nameof(firstName));
+        lastName = ValidateName(lastName, nameof(lastName));
+    }
+    public void UpdateEmail(string email)
+    {
+        {
+            email = ValidateEmail(email);
+        }
+    }
+    public void UpdatePhone(string phone)
+    {
+        Phone=ValidatePhone(phone);
+    }
+    public void UpdateRole(MemberRoleEnum role)
+    {
+        Role =role;
+    }
+    public void UpdateStatus(MemberStatusEnum status)
+    {
+        Status =status;
+    }
 }

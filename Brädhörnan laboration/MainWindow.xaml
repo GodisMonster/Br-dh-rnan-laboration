@@ -28,10 +28,11 @@
                 <Grid Margin="10">
 
                     <Grid.ColumnDefinitions>
-                       
-                            <ColumnDefinition Width="3.5*"/>
-                            <ColumnDefinition Width="Auto"/>
-                    
+
+                        <ColumnDefinition Width="19*"/>
+                        <ColumnDefinition Width="88*"/>
+                        <ColumnDefinition Width="Auto"/>
+
 
                     </Grid.ColumnDefinitions>
 
@@ -39,16 +40,10 @@
                     <ListBox x:Name="GamesListBox"
                  Grid.Column="0"
                  Margin="0,0,10,0"
-                 SelectionChanged = "GamesListBox_SelectionChanged"/>
-                    
+                 SelectionChanged = "GamesListBox_SelectionChanged" 
+                             Grid.ColumnSpan="2"/>
+
                     <!-- DETALJER -->
-                    
-
-
-
-
-
-                    
 
                     <!-- Formulär -->
                     <StackPanel Grid.Column="2">
@@ -79,6 +74,12 @@
                                 Height="35"
                                 Click="AddGameButton_Click"/>
 
+                        <Button x:Name="UpdateGameButton"
+                                Content="Uppdatera spel"
+                                Height="35"
+                                Margin="0,10,0,0"
+                                Click="UpdateGameButton_Click"/>
+
                     </StackPanel>
 
                 </Grid>
@@ -98,7 +99,8 @@
                     <!-- Medlemslista -->
                     <ListBox x:Name="MembersListBox"
                              Grid.Column="0"
-                             Margin="0,0,10,0"/>
+                             Margin="0,0,10,0"
+                             SelectionChanged="MemberListBox_SelectionChanged"/>
 
                     <!-- Form -->
                     <StackPanel Grid.Column="1">
@@ -122,23 +124,38 @@
 
                         <TextBlock Text="Telefon"/>
                         <TextBox x:Name="PhoneTextBox"
-                                 Margin="0,0,0,20"/>
+                                 Margin="0,0,0,10"/>
 
                         <TextBlock Text="Roll"/>
-
-                  
                         <ComboBox x:Name="RollComboBox"
-                         Margin="0,0,0,10"/>
-                        
-                        
+                                    Margin="0,0,0,10"
+                                  Height="20"/>
 
+                        <TextBlock Text="Status"/>
+                        <ComboBox x:Name="StatusComboBox"
+                                  Margin="0,0,0,20"
+                                  Height="20"/>
 
-                        <Button Content="Registrera medlem"
+                        <Button x:Name="AddMemberButton"
+                                Content="Registrera medlem"
                                 Height="35"
+                                Margin="0,10,0,0"
                                 Click="AddMemberButton_Click"/>
-                        
-                        
 
+                        <Button x:Name="UpdateMemberButton"
+                                Content="Uppdatera medlem"
+                                Height="35"
+                                Margin="0,10,0,0"
+                                Click="UpdateMemberButton_Click"/>
+
+                        <Button x:Name="RemoveMemberbutton"
+                                        Content="Ta bort medlem"
+                                        Height="35"
+                                        Margin="0,10,0,0"
+                                        Click="RemoveMemberButton_Click"/>
+                        
+                        
+                        
                     </StackPanel>
 
                 </Grid>

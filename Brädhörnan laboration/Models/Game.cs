@@ -100,7 +100,17 @@ public class Game
             throw new ArgumentException(
                 "Spelbeskrivningen får inte vara längre än 500 tecken");
         GameDescription = trimmed;
-
+    }
+    public void UpdateGame(
+        string gameName,
+        int minPlayers,
+        int maxPlayers,
+        int averageGameLength)
+    {
+        GameName = gameName;
+        MinimumNumberOfPlayer = minPlayers;
+        MaximumNumberOfPlayer = maxPlayers;
+        AverageGameLength = averageGameLength;
     }
 
     public void SetDifficulty(DifficultyLevelEnum difficulty)

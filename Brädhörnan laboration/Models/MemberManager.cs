@@ -3,8 +3,10 @@ using Brädhörnan_laboration.Models;
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Xml.Linq;
+
 
 namespace Brädhörnan_laboration.Services;
 
@@ -18,6 +20,7 @@ public class MemberManager
         string lastName,
         string email,
         string phone = "",
+        string status = "",
         string roll ="")
     {
 
@@ -27,6 +30,7 @@ public class MemberManager
             lastName,
             email,
             phone,
+            status,
             roll);
 
         _members.Add(member);
@@ -72,6 +76,7 @@ public class MemberManager
         }
         return false;
     }
+
 }
 
 
