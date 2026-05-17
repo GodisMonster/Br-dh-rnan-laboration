@@ -8,7 +8,8 @@ namespace Brädhörnan_laboration.Enum
 {
     public enum DifficultyLevelEnum
     {
-        Easy = 0,
+        Unknown = 0,
+        Easy = 1,
         Intermediate = 2,
         Advanced = 3
     }

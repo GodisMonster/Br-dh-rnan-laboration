@@ -21,6 +21,7 @@ public class GameMeeting
     public Member? Responsible { get; private set; }
     public EventTypeEnum EventType { get; private set; }
     public string Information { get; private set; } = "";
+
     public IReadOnlyCollection<Game> PlannedGames => _plannedGames.AsReadOnly();
     public IReadOnlyCollection<Member> Participants => _participants.AsReadOnly();
     public bool IsFull 

@@ -2,6 +2,7 @@
 using Brädhörnan_laboration.Models;
 using Brädhörnan_laboration.Services;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -19,30 +20,48 @@ namespace Brädhörnan_laboration
         public MainWindow()
         {
             InitializeComponent();
-
-           
-      
+            
             RollComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberRoleEnum));
             StatusComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberStatusEnum));
             DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
-            
+            EventTypeComboBox.ItemsSource = System.Enum.GetValues(typeof(EventTypeEnum));
+            StatusComboBox.SelectedItem = MemberStatusEnum.Active;
+            RollComboBox.SelectedItem = MemberRoleEnum.Member;
+
         }
         
         private void AddGameButton_Click(object sender, RoutedEventArgs e) // Metoder i Lägg till spel knappen
         {
             try
             {
-                var game = _gameManager.AddGame(
+                if(!int.TryParse(MinPlayersTextBox.Text, out int minPlayers))
+                {
+                    MessageBox.Show("Minsta antal spelare måste vara minst 1.");
+                    return;
+                }
+                if(!int.TryParse(MaxPlayersTextBox.Text,out int maxPlayers))
+                {
+                    MessageBox.Show("Max antal spelare måste vara högre än minsta antal spelare.");
+                    return;
+                }
+                if(!int.TryParse(GameLengthTextBox.Text,out int gameLength))
+                {
+                    MessageBox.Show("Speltid måste vara ett nummer.");
+                    return;
+                }
+                var difficulty =
+                    DifficultyComboBox.SelectedItem is DifficultyLevelEnum selectedDifficulty ?
+                    selectedDifficulty : DifficultyLevelEnum.Unknown;
+
+                 _gameManager.AddGame(
                     GameNameTextBox.Text,
-                    int.Parse(MinPlayersTextBox.Text),
-                    int.Parse(MaxPlayersTextBox.Text),
-                    int.Parse(GameLengthTextBox.Text),
-                    DifficultyComboBox.Text);
+                            minPlayers,
+                            maxPlayers,
+                            gameLength,
+                            difficulty);
 
-                GamesListBox.Items.Add(game);
 
-                RefreshMemberList();
-             
+                RefreshGameList();
                 ClearGameInputs();
 
                 MessageBox.Show("Spelet skapades!");
@@ -112,15 +131,33 @@ namespace Brädhörnan_laboration
         {
             try
             {
-                var member = _memberManager.RegisterNewMember(
-                    FirstNameTextBox.Text,
-                    LastNameTextBox.Text,
-                    EmailTextBox.Text,
-                    PhoneTextBox.Text,
-                    StatusComboBox.Text,
-                    RollComboBox.Text);
+                if (string.IsNullOrWhiteSpace(FirstNameTextBox.Text))
+                {
+                    MessageBox.Show("Fällt måste fyllas.");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(LastNameTextBox.Text))
+                {
+                    MessageBox.Show("Fällt måste fyllas.");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(EmailTextBox.Text))
+                {
+                    MessageBox.Show("E-post måste anges.");
+                    return;
+                }
 
-                MembersListBox.Items.Add(member);
+                string phone = PhoneTextBox.Text ?? "";
+
+                var member = _memberManager.RegisterNewMember(
+                    FirstNameTextBox.Text,    
+                    LastNameTextBox.Text,      
+                    EmailTextBox.Text,
+                    phone,
+                    (MemberStatusEnum)StatusComboBox.SelectedItem, 
+                    (MemberRoleEnum)RollComboBox.SelectedItem);   
+
+                
                 RefreshMemberList();
                 ClearMemberInputs();
 
@@ -188,13 +225,34 @@ namespace Brädhörnan_laboration
         {
             try
             {
+
+                if (MeetingDatePicker.SelectedDate == null)
+                {
+                    MessageBox.Show("Välj datum.");
+                    return;
+                }
+                if(!TimeSpan.TryParse(MeetingTimeTextBox.Text, out TimeSpan time))
+                {
+                    MessageBox.Show("Ange giltid tid. Exempel 17:45.");
+                    return;
+                }
+                if(EventTypeComboBox.SelectedItem == null)
+                {
+                    MessageBox.Show("Välj eventtyp.");
+                    return;
+                }
+                DateTime dateAndTime = MeetingDatePicker.SelectedDate.Value.Date + time;
+
+                var eventType = (EventTypeEnum)EventTypeComboBox.SelectedItem;
+
+
                 var meeting = _meetingManager.CreateGameMeeting(
-                    DateTime.Now.AddDays(1),
+                    dateAndTime,
                     LocationTextBox.Text,
                     int.Parse(MaxParticipantsTextBox.Text),
-                    EventTypeEnum.Opening_evening);
+                    eventType);
 
-                MeetingsListBox.Items.Add(meeting);
+                RefreshMeetingList();
 
                 MessageBox.Show("Spelträff skapad!");
             }
@@ -247,7 +305,17 @@ namespace Brädhörnan_laboration
             UpdateMemberButton.Visibility = Visibility.Collapsed;
             MembersListBox.SelectedItem = null;
         }
-     
+        private void RefreshMeetingList()
+        {
+             MeetingsListBox.Items.Clear();
+
+           foreach (var meeting in _meetingManager.GetAllMeetings())
+           {
+                MeetingsListBox.Items.Add(meeting);
+           }
+        }
+
+
 
 
         // Listboxar
@@ -264,10 +332,10 @@ namespace Brädhörnan_laboration
                 GameLengthTextBox.Text = selectedGame.AverageGameLength.ToString();
 
 
-                AddGameButton.Visibility = Visibility;
-                UpdateGameButton.Visibility = Visibility;
+                AddGameButton.Visibility = Visibility.Visible;
+                UpdateGameButton.Visibility = Visibility.Visible;
 
-                
+
                 MessageBox.Show(selectedGame.ToString());
             }
         }
@@ -289,6 +357,7 @@ namespace Brädhörnan_laboration
                 UpdateMemberButton.Visibility = Visibility.Visible;
             }
         }
+        
     }
 
 

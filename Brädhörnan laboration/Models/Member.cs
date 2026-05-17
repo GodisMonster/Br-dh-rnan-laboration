@@ -15,8 +15,6 @@ public class Member
     private const int EmailMaxLength = 254;
     private const int PhoneMaxLength = 20;
 
-
-
     public int MemberNumber { get; private set; }
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
@@ -30,10 +28,10 @@ public class Member
         int memberNumber,
         string firstName,
         string lastName,
-        string email,
-        string phone = "",
-        string status = "",
-        string roll= "")
+        string email,   
+        MemberStatusEnum status,
+        MemberRoleEnum role,
+         string phone = "")
     {
 
         if (memberNumber <= 0) 
@@ -43,34 +41,35 @@ public class Member
 
         MemberNumber = memberNumber;
 
-
         FirstName = ValidateName(firstName, nameof(firstName));
         LastName = ValidateName(lastName, nameof(lastName));
         Email = ValidateEmail(email);
         Phone = ValidatePhone(phone);
         RegistrationDate = DateTime.UtcNow;
+        Role = role;
+        Status = status;
 
-        switch (roll)
-        {
-            case "Admin": Role = MemberRoleEnum.Admin; break;
+        //switch (roll)
+        //{
+        //    case "Admin": Role = MemberRoleEnum.Admin; break;
 
-            case "Member": Role = MemberRoleEnum.Member; break;
+        //    case "Member": Role = MemberRoleEnum.Member; break;
 
-            case "Organizer": Role = MemberRoleEnum.Organizer; break;
+        //    case "Organizer": Role = MemberRoleEnum.Organizer; break;
 
-            default:
-                break;
+        //    default:
+        //        break;
 
-        }
-        switch (status)
-        {
-            case "Actice": Status = MemberStatusEnum.Active; break;
-            case "Inactive": Status = MemberStatusEnum.Inactive; break;
-        }
-        
+        //}
+        //switch (status)
+        //{
+        //    case "Active": Status = MemberStatusEnum.Active; break;
+        //    case "Inactive": Status = MemberStatusEnum.Inactive; break;
+        //}
+
 
     }
-    public string ValidateName(string value, string paramName)
+    private string ValidateName(string value, string paramName)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentNullException(paramName,
@@ -85,9 +84,16 @@ public class Member
                 paramName,
                 $"Namn måste vara {NameMinLength}-{NameMaxLength} tecken.");  
         }
+        if (!Regex.IsMatch(value, @"^[a-zA-ZåäöÅÄÖ\s-]+$"))
+        {
+            throw new ArgumentException(
+                "Namn får endast innehålla bokstäver.");
+        }
+
+
         return value;
     }
-    public string ValidateEmail(string email)
+    private string ValidateEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentNullException(nameof(email),
@@ -111,7 +117,7 @@ public class Member
         }
         return email;  
     }
-    public string ValidatePhone(string phone)
+    private string ValidatePhone(string phone)
     {
         if (string.IsNullOrWhiteSpace(phone))
             return "";
@@ -123,27 +129,24 @@ public class Member
                 nameof(phone),
                 $"Telefonnummer får max vara {PhoneMaxLength} tecken.");
 
-        if (phone.Length < 8)  
-            throw new ArgumentOutOfRangeException(
-                nameof(phone),
-                "Telefonnummer måste ha minst 8 siffror.");
+       
 
         return phone;
     }
     public override string ToString()
     {
-        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn: {FirstName} Efternamn: {LastName} Status: ({Status}) Roll: {Role}";
+        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn:  {FirstName} - Efternamn: {LastName} Status: ({Status}) Roll: {Role}";
     }
 
     public void UpdateName(string firstName, string lastName)
     {
-        firstName = ValidateName(firstName, nameof(firstName));
-        lastName = ValidateName(lastName, nameof(lastName));
+        FirstName = ValidateName(firstName, nameof(firstName));
+        LastName = ValidateName(lastName, nameof(lastName));
     }
     public void UpdateEmail(string email)
     {
         {
-            email = ValidateEmail(email);
+            Email = ValidateEmail(email);
         }
     }
     public void UpdatePhone(string phone)

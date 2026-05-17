@@ -18,8 +18,9 @@
              string gameName,
              int minPlayers,
              int maxPlayers,
-             int averageGameLength,
-             string difficulty="")
+             int averageGameLength,   
+             DifficultyLevelEnum difficulty) // Lägg till
+
             {
                 var game = new Game(
                     _nextGameId++,

@@ -22,7 +22,7 @@ public class Game
 
     public string GameDescription { get; private set; } = string.Empty;
 
-    public DifficultyLevelEnum DifficultyLevel { get; private set; } // Ingen default..
+    public DifficultyLevelEnum DifficultyLevel { get; private set; } = DifficultyLevelEnum.Unknown;
 
     public GamegenreEnum Gamegenre { get; private set; } = GamegenreEnum.Unknown; // Saknar combobox
 
@@ -35,7 +35,8 @@ public class Game
         int minPlayers,
         int maxPlayers,
         int averageGameLength,
-        string difficulty="")
+        DifficultyLevelEnum difficulty)
+    // string difficulty="") // Ta bort ?
     {
         if (gameId <= 0)
             throw new ArgumentOutOfRangeException(nameof(gameId));
@@ -44,26 +45,28 @@ public class Game
         ValidatePlayerCounts(minPlayers, maxPlayers);
 
         if (averageGameLength <= 0)
-            throw new ArgumentOutOfRangeException(nameof(averageGameLength));
+            throw new ArgumentOutOfRangeException(
+                nameof(averageGameLength), "Speltid måste anges");
 
         GameId = gameId;
         GameName = gameName.Trim();
         MinimumNumberOfPlayer = minPlayers;
         MaximumNumberOfPlayer = maxPlayers;
         AverageGameLength = averageGameLength;
+        DifficultyLevel = difficulty;
 
-        switch (difficulty)
-        {
-            case "Easy": DifficultyLevel = DifficultyLevelEnum.Easy; break;
-            case "Intermediate":DifficultyLevel = DifficultyLevelEnum.Intermediate; break;
-            case "Advanced": DifficultyLevel = DifficultyLevelEnum.Advanced; break;
+        //switch (difficulty)
+        //{
+        //    case "Easy": DifficultyLevel = DifficultyLevelEnum.Easy; break;
+        //    case "Intermediate":DifficultyLevel = DifficultyLevelEnum.Intermediate; break;
+        //    case "Advanced": DifficultyLevel = DifficultyLevelEnum.Advanced; break;
 
-            default:
+        //    default:
 
-                break;
-       
-        }
-          
+        //        break;
+
+        //}
+
     }
 
     private static void ValidateGameName(string gameName)
@@ -88,7 +91,7 @@ public class Game
             throw new ArgumentOutOfRangeException(nameof(max), "Ett spel kan inte ha lägre maxantal spelare än minsta antal");
 
         if (max > 16)
-            throw new ArgumentOutOfRangeException(nameof(max));
+            throw new ArgumentOutOfRangeException(nameof(max), "Orimligt många spelare.");
     }
 
     public void ChangePlayerCount(int minPlayers, int maxPlayers)

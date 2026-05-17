@@ -200,6 +200,24 @@
                         <TextBlock Text="Max deltagare"/>
                         <TextBox x:Name="MaxParticipantsTextBox"
                                  Margin="0,0,0,10"/>
+                        <TextBlock Text="Ansvarig"/>
+                        <TextBox x:Name="ResponsibleTextBox"
+                                 Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Eventtyp"/>
+                        <ComboBox x:Name="EventTypeComboBox"
+                                 Margin="0,0,0,20"
+                                  Height="20"/>
+                        
+                        <TextBlock Text="Datum"/>
+                        <DatePicker x:Name="MeetingDatePicker"
+                                 Margin="0,0,0,10"/>
+
+
+                        <TextBlock Text="Tid (HH:mm)"/>
+                        <TextBox x:Name="MeetingTimeTextBox"
+                                      Margin="0,0,0,10"/>
+
 
                         <Button Content="Skapa träff"
                                 Height="35"

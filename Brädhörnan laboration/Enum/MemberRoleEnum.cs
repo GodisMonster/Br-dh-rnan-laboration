@@ -8,6 +8,7 @@ namespace Brädhörnan_laboration.Enum
 {
     public enum MemberRoleEnum
     {
+       
         Admin = 0,
         Organizer = 1,
         Member = 2

@@ -16,25 +16,23 @@ public class MemberManager
 
     private int _nextMemberNumber = 1;
     public Member RegisterNewMember(
-        string firstName,
-        string lastName,
-        string email,
-        string phone = "",
-        string status = "",
-        string roll ="")
+    string firstName,
+    string lastName,
+    string email,
+    string phone,
+    MemberStatusEnum status,
+    MemberRoleEnum role)
     {
-
         var member = new Member(
-            _nextMemberNumber++,
-            firstName,
-            lastName,
-            email,
-            phone,
-            status,
-            roll);
+            _nextMemberNumber++,  
+            firstName,            
+            lastName,             
+            email,              
+            status,              
+            role,                
+            phone);               
 
         _members.Add(member);
-
         return member;
     }
 
