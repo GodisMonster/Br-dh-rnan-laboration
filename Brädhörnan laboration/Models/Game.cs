@@ -22,9 +22,9 @@ public class Game
 
     public string GameDescription { get; private set; } = string.Empty;
 
-    public DifficultyLevelEnum DifficultyLevel { get; private set; } = DifficultyLevelEnum.Easy;
+    public DifficultyLevelEnum DifficultyLevel { get; private set; } // Ingen default..
 
-    public GamegenreEnum Gamegenre { get; private set; } = GamegenreEnum.Unknown;
+    public GamegenreEnum Gamegenre { get; private set; } = GamegenreEnum.Unknown; // Saknar combobox
 
     public GameAvailabilityEnum GameAvailability { get; private set; }
         = GameAvailabilityEnum.Available;
@@ -34,7 +34,8 @@ public class Game
         string gameName,
         int minPlayers,
         int maxPlayers,
-        int averageGameLength)
+        int averageGameLength,
+        string difficulty="")
     {
         if (gameId <= 0)
             throw new ArgumentOutOfRangeException(nameof(gameId));
@@ -50,6 +51,19 @@ public class Game
         MinimumNumberOfPlayer = minPlayers;
         MaximumNumberOfPlayer = maxPlayers;
         AverageGameLength = averageGameLength;
+
+        switch (difficulty)
+        {
+            case "Easy": DifficultyLevel = DifficultyLevelEnum.Easy; break;
+            case "Intermediate":DifficultyLevel = DifficultyLevelEnum.Intermediate; break;
+            case "Advanced": DifficultyLevel = DifficultyLevelEnum.Advanced; break;
+
+            default:
+
+                break;
+       
+        }
+          
     }
 
     private static void ValidateGameName(string gameName)
@@ -105,12 +119,14 @@ public class Game
         string gameName,
         int minPlayers,
         int maxPlayers,
-        int averageGameLength)
+        int averageGameLength,
+        string difficulty = "")
     {
         GameName = gameName;
         MinimumNumberOfPlayer = minPlayers;
         MaximumNumberOfPlayer = maxPlayers;
         AverageGameLength = averageGameLength;
+        
     }
 
     public void SetDifficulty(DifficultyLevelEnum difficulty)

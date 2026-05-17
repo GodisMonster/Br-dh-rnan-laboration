@@ -152,7 +152,7 @@ public class Member
     }
     public void UpdateRole(MemberRoleEnum role)
     {
-        Role =role;
+        Role = role;
     }
     public void UpdateStatus(MemberStatusEnum status)
     {

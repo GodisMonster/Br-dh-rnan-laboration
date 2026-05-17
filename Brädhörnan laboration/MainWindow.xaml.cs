@@ -24,7 +24,8 @@ namespace Brädhörnan_laboration
             //DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
             RollComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberRoleEnum));
             StatusComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberStatusEnum));
-
+            DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
+            
         }
         
            
@@ -37,9 +38,13 @@ namespace Brädhörnan_laboration
                     GameNameTextBox.Text,
                     int.Parse(MinPlayersTextBox.Text),
                     int.Parse(MaxPlayersTextBox.Text),
-                    int.Parse(GameLengthTextBox.Text));
+                    int.Parse(GameLengthTextBox.Text),
+                    DifficultyComboBox.Text);
 
                 GamesListBox.Items.Add(game);
+
+                RefreshMemberList();
+                ClearMemberInputs();
                 ClearGameInputs();
 
                 MessageBox.Show("Spelet skapades!");
@@ -61,6 +66,7 @@ namespace Brädhörnan_laboration
                     int.Parse(MinPlayersTextBox.Text),
                     int.Parse(MaxPlayersTextBox.Text),
                     int.Parse(GameLengthTextBox.Text));
+
                 RefreshGameList();
                 ClearGameInputs();
 
@@ -188,6 +194,7 @@ namespace Brädhörnan_laboration
             MinPlayersTextBox.Clear();
             MaxPlayersTextBox.Clear();
             GameLengthTextBox.Clear();
+            DifficultyComboBox.SelectedItem = null;
         }
         private void RefreshMemberList()
         {
@@ -229,6 +236,7 @@ namespace Brädhörnan_laboration
                 MaxPlayersTextBox.Text = selectedGame.MaximumNumberOfPlayer.ToString();
                 GameLengthTextBox.Text = selectedGame.AverageGameLength.ToString();
 
+
                 AddGameButton.Visibility = Visibility;
                 UpdateGameButton.Visibility = Visibility;
 
@@ -249,7 +257,7 @@ namespace Brädhörnan_laboration
                 StatusComboBox.SelectedItem = selectedMember.Status;
                 RollComboBox.SelectedItem = selectedMember.Role;
 
-                // Visa Update-knappen, dölj Registrera-knappen
+               
                 AddMemberButton.Visibility = Visibility.Visible;
                 UpdateMemberButton.Visibility = Visibility.Visible;
             }

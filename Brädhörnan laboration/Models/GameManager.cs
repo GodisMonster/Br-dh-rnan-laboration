@@ -18,14 +18,16 @@
              string gameName,
              int minPlayers,
              int maxPlayers,
-             int averageGameLength)
+             int averageGameLength,
+             string difficulty="")
             {
                 var game = new Game(
                     _nextGameId++,
                     gameName,
                     minPlayers,
                     maxPlayers,
-                    averageGameLength);
+                    averageGameLength,
+                    difficulty);
 
                 _games.Add(game);
 

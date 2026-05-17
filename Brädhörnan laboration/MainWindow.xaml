@@ -64,6 +64,10 @@
                         <TextBlock Text="Max spelare"/>
                         <TextBox x:Name="MaxPlayersTextBox"
                                  Margin="0,0,0,10"/>
+                        <TextBlock Text="Spelsvårighet"/>
+                        <ComboBox x:Name="DifficultyComboBox"
+                                  Margin="0,0,0,10"
+                                  Height="20"/>
 
                         <TextBlock Text="Speltid (min)"/>
                         <TextBox x:Name="GameLengthTextBox"
@@ -153,9 +157,7 @@
                                         Height="35"
                                         Margin="0,10,0,0"
                                         Click="RemoveMemberButton_Click"/>
-                        
-                        
-                        
+                         
                     </StackPanel>
 
                 </Grid>
