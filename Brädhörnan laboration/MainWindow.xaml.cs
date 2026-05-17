@@ -21,15 +21,13 @@ namespace Brädhörnan_laboration
             InitializeComponent();
 
            
-            //DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
+      
             RollComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberRoleEnum));
             StatusComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberStatusEnum));
             DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
             
         }
         
-           
-
         private void AddGameButton_Click(object sender, RoutedEventArgs e) // Metoder i Lägg till spel knappen
         {
             try
@@ -44,7 +42,7 @@ namespace Brädhörnan_laboration
                 GamesListBox.Items.Add(game);
 
                 RefreshMemberList();
-                ClearMemberInputs();
+             
                 ClearGameInputs();
 
                 MessageBox.Show("Spelet skapades!");
@@ -62,10 +60,12 @@ namespace Brädhörnan_laboration
             try
             {
                 _selectedGame.UpdateGame(
-                    GameNameTextBox.Text,
-                    int.Parse(MinPlayersTextBox.Text),
-                    int.Parse(MaxPlayersTextBox.Text),
-                    int.Parse(GameLengthTextBox.Text));
+                 GameNameTextBox.Text,
+                 int.Parse(MinPlayersTextBox.Text),
+                 int.Parse(MaxPlayersTextBox.Text),
+                 int.Parse(GameLengthTextBox.Text),
+                 (DifficultyLevelEnum)DifficultyComboBox.SelectedItem);
+    
 
                 RefreshGameList();
                 ClearGameInputs();
@@ -76,6 +76,33 @@ namespace Brädhörnan_laboration
                 MessageBox.Show("Spelet uppdaterat.");
             }
             catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void RemoveGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ( _selectedGame == null) return;
+
+            try
+            {
+                bool removed = _gameManager.RemoveGame(_selectedGame.GameId);
+
+                if( removed)
+                {
+                    RefreshGameList();
+                    ClearGameInputs();
+
+                    _selectedGame = null;
+
+                    MessageBox.Show("Spelet har tagits bort.");
+                }
+                else
+                {
+                    MessageBox.Show("Spelet hittades inte.");
+                }
+            }
+            catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -262,8 +289,6 @@ namespace Brädhörnan_laboration
                 UpdateMemberButton.Visibility = Visibility.Visible;
             }
         }
-      
-
     }
 
 

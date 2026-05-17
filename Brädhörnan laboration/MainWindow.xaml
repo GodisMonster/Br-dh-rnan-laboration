@@ -84,6 +84,12 @@
                                 Margin="0,10,0,0"
                                 Click="UpdateGameButton_Click"/>
 
+                        <Button x:Name="RemoveGameButton"
+                                Content="Ta bort spel"
+                                Height="35"
+                                Margin="0,10,0,0"
+                                Click="RemoveGameButton_Click"/>
+
                     </StackPanel>
 
                 </Grid>

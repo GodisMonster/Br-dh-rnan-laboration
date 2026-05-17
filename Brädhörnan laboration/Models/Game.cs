@@ -120,12 +120,13 @@ public class Game
         int minPlayers,
         int maxPlayers,
         int averageGameLength,
-        string difficulty = "")
+        DifficultyLevelEnum difficulty)
     {
         GameName = gameName;
         MinimumNumberOfPlayer = minPlayers;
         MaximumNumberOfPlayer = maxPlayers;
-        AverageGameLength = averageGameLength;
+        AverageGameLength = averageGameLength; 
+        DifficultyLevel = difficulty;
         
     }
 
@@ -172,6 +173,6 @@ public class Game
     public override string ToString()
     {
         return $"{GameName} ({MinimumNumberOfPlayer}-{MaximumNumberOfPlayer} spelare, " +
-               $"{AverageGameLength} min, {DifficultyLevel})";
+               $"{AverageGameLength} min, {DifficultyLevel}) Spel-ID: {GameId}";
     }
 }
