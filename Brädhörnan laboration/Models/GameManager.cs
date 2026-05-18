@@ -42,15 +42,15 @@
             {
                 return _games.FirstOrDefault(g => g.GameId == gameId);
             }
-            public IEnumerable<Game> GetAvailableGames()
-            {
-                return _games.Where(g => g.GameAvailability == GameAvailabilityEnum.Available);
-            }     
-            public IEnumerable<Game> GetGamesForPlayerCount(int numberOfPlayers)
-            {
-                return _games.Where(g => g.IsSuitableForPlayerCount(numberOfPlayers));
-            }
-            public IEnumerable<Game> GetGamesSortedByName()
+        public IEnumerable<Game> GetAvailableGames()
+        {
+            return _games.Where(g => g.GameAvailability == GameAvailabilityEnum.Available);
+        }
+        public IEnumerable<Game> GetGamesForPlayerCount(int numberOfPlayers)
+        {
+            return _games.Where(g => g.IsSuitableForPlayerCount(numberOfPlayers));
+        }
+        public IEnumerable<Game> GetGamesSortedByName()
             {
                 return _games.OrderBy(g => g.GameName);
             }

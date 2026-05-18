@@ -22,7 +22,7 @@ public class Game
 
     public string GameDescription { get; private set; } = string.Empty;
 
-    public DifficultyLevelEnum DifficultyLevel { get; private set; } = DifficultyLevelEnum.Unknown;
+    public DifficultyLevelEnum DifficultyLevel { get; private set; } // = DifficultyLevelEnum.Easy;
 
     public GamegenreEnum Gamegenre { get; private set; } = GamegenreEnum.Unknown; // Saknar combobox
 
@@ -36,7 +36,6 @@ public class Game
         int maxPlayers,
         int averageGameLength,
         DifficultyLevelEnum difficulty)
-    // string difficulty="") // Ta bort ?
     {
         if (gameId <= 0)
             throw new ArgumentOutOfRangeException(nameof(gameId));
@@ -55,20 +54,8 @@ public class Game
         AverageGameLength = averageGameLength;
         DifficultyLevel = difficulty;
 
-        //switch (difficulty)
-        //{
-        //    case "Easy": DifficultyLevel = DifficultyLevelEnum.Easy; break;
-        //    case "Intermediate":DifficultyLevel = DifficultyLevelEnum.Intermediate; break;
-        //    case "Advanced": DifficultyLevel = DifficultyLevelEnum.Advanced; break;
-
-        //    default:
-
-        //        break;
-
-        //}
-
+    
     }
-
     private static void ValidateGameName(string gameName)
     {
         if (string.IsNullOrWhiteSpace(gameName))
@@ -81,7 +68,6 @@ public class Game
             throw new ArgumentException(
                 "Spelnamn måste vara mellan 2 och 100 tecken");
     }
-
     private static void ValidatePlayerCounts(int min, int max)
     {
         if (min < 1)

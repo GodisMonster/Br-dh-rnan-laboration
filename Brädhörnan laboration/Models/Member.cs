@@ -20,9 +20,11 @@ public class Member
     public string LastName { get; private set; }
     public string Email { get; private set; }
     public string Phone { get; private set; }
-    public DateTime RegistrationDate { get; init; } // Borde inte kunna ändras alls?
+    public DateTime RegistrationDate { get; init; }
     public MemberRoleEnum Role { get; private set; }
     public MemberStatusEnum Status { get; private set; }
+
+    public string FullName => $"{FirstName} {LastName}";
 
     public Member(
         int memberNumber,
@@ -31,9 +33,8 @@ public class Member
         string email,   
         MemberStatusEnum status,
         MemberRoleEnum role,
-         string phone = "")
+        string phone = "")
     {
-
         if (memberNumber <= 0) 
             throw new ArgumentOutOfRangeException(
                 nameof(memberNumber),
@@ -48,26 +49,6 @@ public class Member
         RegistrationDate = DateTime.UtcNow;
         Role = role;
         Status = status;
-
-        //switch (roll)
-        //{
-        //    case "Admin": Role = MemberRoleEnum.Admin; break;
-
-        //    case "Member": Role = MemberRoleEnum.Member; break;
-
-        //    case "Organizer": Role = MemberRoleEnum.Organizer; break;
-
-        //    default:
-        //        break;
-
-        //}
-        //switch (status)
-        //{
-        //    case "Active": Status = MemberStatusEnum.Active; break;
-        //    case "Inactive": Status = MemberStatusEnum.Inactive; break;
-        //}
-
-
     }
     private string ValidateName(string value, string paramName)
     {
@@ -89,8 +70,6 @@ public class Member
             throw new ArgumentException(
                 "Namn får endast innehålla bokstäver.");
         }
-
-
         return value;
     }
     private string ValidateEmail(string email)
@@ -128,16 +107,12 @@ public class Member
             throw new ArgumentOutOfRangeException(
                 nameof(phone),
                 $"Telefonnummer får max vara {PhoneMaxLength} tecken.");
-
-       
-
         return phone;
     }
     public override string ToString()
     {
-        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn:  {FirstName} - Efternamn: {LastName} Status: ({Status}) Roll: {Role}";
+        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn:  {FirstName} - Efternamn: {LastName} Status: ({Status}) - Roll: {Role}";
     }
-
     public void UpdateName(string firstName, string lastName)
     {
         FirstName = ValidateName(firstName, nameof(firstName));

@@ -18,56 +18,57 @@ namespace Brädhörnan_laboration
         private Member? _selectedMember = null;
         private Game? _selectedGame = null;
         private GameMeeting _selectedMeeting = null;
-       
+
         public MainWindow()
         {
             InitializeComponent();
-            
+
             RollComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberRoleEnum));
             StatusComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberStatusEnum));
             DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
             EventTypeComboBox.ItemsSource = System.Enum.GetValues(typeof(EventTypeEnum));
+            
 
 
             StatusComboBox.SelectedItem = MemberStatusEnum.Active;
             RollComboBox.SelectedItem = MemberRoleEnum.Member;
+            DifficultyComboBox.SelectedItem = DifficultyLevelEnum.Easy;
 
             RefreshAvailableMembers();
 
 
+
         }
-        
         private void AddGameButton_Click(object sender, RoutedEventArgs e) // Metoder i Lägg till spel knappen
         {
             try
             {
-                if(!int.TryParse(MinPlayersTextBox.Text, out int minPlayers))
+                if (!int.TryParse(MinPlayersTextBox.Text, out int minPlayers))
                 {
                     MessageBox.Show("Minsta antal spelare måste vara minst 1.");
                     return;
                 }
-                if(!int.TryParse(MaxPlayersTextBox.Text,out int maxPlayers))
+                if (!int.TryParse(MaxPlayersTextBox.Text, out int maxPlayers))
                 {
                     MessageBox.Show("Max antal spelare måste vara högre än minsta antal spelare.");
                     return;
                 }
-                if(!int.TryParse(GameLengthTextBox.Text,out int gameLength))
+                if (!int.TryParse(GameLengthTextBox.Text, out int gameLength))
                 {
                     MessageBox.Show("Speltid måste vara ett nummer.");
                     return;
                 }
-                var difficulty =
-                    DifficultyComboBox.SelectedItem is DifficultyLevelEnum selectedDifficulty ?
-                    selectedDifficulty : DifficultyLevelEnum.Unknown;
+               //var difficulty =
+               //     DifficultyComboBox.SelectedItem is DifficultyLevelEnum selectedDifficulty ?
+               //     selectedDifficulty : DifficultyLevelEnum.Easy;
 
                 // Implementerar metod från GameManager
-                 _gameManager.AddGame(
-                    GameNameTextBox.Text,
-                            minPlayers,
-                            maxPlayers,
-                            gameLength,
-                            difficulty);
-
+                _gameManager.AddGame(
+                   GameNameTextBox.Text,
+                           minPlayers,
+                           maxPlayers,
+                           gameLength,
+                           (DifficultyLevelEnum)DifficultyComboBox.SelectedItem);
 
                 RefreshGameList();
                 ClearGameInputs();
@@ -92,7 +93,7 @@ namespace Brädhörnan_laboration
                  int.Parse(MaxPlayersTextBox.Text),
                  int.Parse(GameLengthTextBox.Text),
                  (DifficultyLevelEnum)DifficultyComboBox.SelectedItem);
-    
+
 
                 RefreshGameList();
                 ClearGameInputs();
@@ -109,13 +110,13 @@ namespace Brädhörnan_laboration
         }
         private void RemoveGameButton_Click(object sender, RoutedEventArgs e)
         {
-            if ( _selectedGame == null) return;
+            if (_selectedGame == null) return;
 
             try
             {
                 bool removed = _gameManager.RemoveGame(_selectedGame.GameId); // Metod från annan klass
 
-                if( removed)
+                if (removed)
                 {
                     RefreshGameList();
                     ClearGameInputs();
@@ -129,7 +130,7 @@ namespace Brädhörnan_laboration
                     MessageBox.Show("Spelet hittades inte.");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -156,16 +157,16 @@ namespace Brädhörnan_laboration
                 }
 
                 string phone = PhoneTextBox.Text ?? "";
-
+                // Metod från MemberManager
                 var member = _memberManager.RegisterNewMember(
-                    FirstNameTextBox.Text,    
-                    LastNameTextBox.Text,      
+                    FirstNameTextBox.Text,
+                    LastNameTextBox.Text,
                     EmailTextBox.Text,
                     phone,
-                    (MemberStatusEnum)StatusComboBox.SelectedItem, 
+                    (MemberStatusEnum)StatusComboBox.SelectedItem,
                     (MemberRoleEnum)RollComboBox.SelectedItem);
 
-               
+
                 RefreshMemberList();
                 RefreshAvailableMembers();
                 ClearMemberInputs();
@@ -227,7 +228,6 @@ namespace Brädhörnan_laboration
                 }
             }
         }
-     
         private void CreateMeetingButton_Click(object sender, RoutedEventArgs e) // Metoder i Skapa möte knappen
         {
             try
@@ -238,12 +238,12 @@ namespace Brädhörnan_laboration
                     MessageBox.Show("Välj datum.");
                     return;
                 }
-                if(!TimeSpan.TryParse(MeetingTimeTextBox.Text, out TimeSpan time))
+                if (!TimeSpan.TryParse(MeetingTimeTextBox.Text, out TimeSpan time))
                 {
                     MessageBox.Show("Ange giltid tid. Exempel 17:45.");
                     return;
                 }
-                if(EventTypeComboBox.SelectedItem == null)
+                if (EventTypeComboBox.SelectedItem == null)
                 {
                     MessageBox.Show("Välj eventtyp.");
                     return;
@@ -259,7 +259,13 @@ namespace Brädhörnan_laboration
                     int.Parse(MaxParticipantsTextBox.Text),
                     eventType);
 
+                if(ResponsibleComboBox.SelectedItem is Member selectedResponsible)
+                {
+                    meeting.SetResponsible(selectedResponsible);
+                }
+
                 RefreshMeetingList();
+                ClearGameMeetingInputs();
 
                 MessageBox.Show("Spelträff skapad!");
             }
@@ -332,32 +338,10 @@ namespace Brädhörnan_laboration
                 MessageBox.Show($"Ett oväntat fel inträffade: {ex.Message}");
             }
         }
-        
-        
-
-       // Hjälpfunktioner för snyggare UI
-        private void ClearMemberInputs()
-        {
-            FirstNameTextBox.Clear();
-            LastNameTextBox.Clear();
-            EmailTextBox.Clear();
-            PhoneTextBox.Clear();
-            StatusComboBox.SelectedItem = null;
-            RollComboBox.SelectedItem = null;
-
-        }
-        private void ClearGameInputs()
-        {
-            GameNameTextBox.Clear();
-            MinPlayersTextBox.Clear();
-            MaxPlayersTextBox.Clear();
-            GameLengthTextBox.Clear();
-            DifficultyComboBox.SelectedItem = null;
-        }
         private void RefreshMemberList()
         {
             MembersListBox.Items.Clear();
-            foreach(var member in _memberManager.GetAllMembers()) // Metod som hämtas från klass
+            foreach (var member in _memberManager.GetAllMembers()) // Metod som hämtas från klass
             {
                 MembersListBox.Items.Add(member);
             }
@@ -378,7 +362,7 @@ namespace Brädhörnan_laboration
             UpdateMemberButton.Visibility = Visibility.Collapsed;
             MembersListBox.SelectedItem = null;
         }
-      
+
         private void RefreshMeetingList()
         {
             MeetingsListBox.Items.Clear();
@@ -399,15 +383,17 @@ namespace Brädhörnan_laboration
             {
                 MeetingParticipantsListBox.Items.Add(participant);
             }
-        }   
-    
+        }
+
         private void RefreshAvailableMembers()
         {
             AvailableMembersComboBox.Items.Clear();
+            ResponsibleComboBox.Items.Clear();
 
             foreach (var member in _memberManager.GetAllMembers())
             {
                 AvailableMembersComboBox.Items.Add(member);
+                ResponsibleComboBox.Items.Add(member);
             }
         }
 
@@ -432,7 +418,7 @@ namespace Brädhörnan_laboration
         }
         private void MemberListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if(MembersListBox.SelectedItem is Member selectedMember)
+            if (MembersListBox.SelectedItem is Member selectedMember)
             {
                 _selectedMember = selectedMember;
 
@@ -443,7 +429,7 @@ namespace Brädhörnan_laboration
                 StatusComboBox.SelectedItem = selectedMember.Status;
                 RollComboBox.SelectedItem = selectedMember.Role;
 
-               
+
                 AddMemberButton.Visibility = Visibility.Visible;
                 UpdateMemberButton.Visibility = Visibility.Visible;
             }
@@ -457,8 +443,34 @@ namespace Brädhörnan_laboration
                 RefreshMeetingParticipantsList();
             }
         }
+        // Hjälpfunktioner för snyggare UI
+        private void ClearMemberInputs()
+        {
+            FirstNameTextBox.Clear();
+            LastNameTextBox.Clear();
+            EmailTextBox.Clear();
+            PhoneTextBox.Clear();
+            StatusComboBox.SelectedItem = MemberStatusEnum.Active;
+            RollComboBox.SelectedItem = MemberRoleEnum.Member;
+        }
+        private void ClearGameInputs()
+        {
+            GameNameTextBox.Clear();
+            MinPlayersTextBox.Clear();
+            MaxPlayersTextBox.Clear();
+            GameLengthTextBox.Clear();
+            DifficultyComboBox.SelectedItem = DifficultyLevelEnum.Easy;
+        }
+        private void ClearGameMeetingInputs()
+        {
+            LocationTextBox.Clear();
+            MaxParticipantsTextBox.Clear();
+            ResponsibleComboBox.SelectedItem = null;
+            EventTypeComboBox.SelectedItem = null;
+            MeetingDatePicker.SelectedDate = null;
+            MeetingTimeTextBox.Clear();
+            
+
+        }
     }
-
-
-
 }

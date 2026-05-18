@@ -35,36 +35,26 @@ public class MemberManager
         _members.Add(member);
         return member;
     }
-
     public IEnumerable<Member> GetAllMembers()
     {
         return _members.ToList();
     }
-
-
     public IEnumerable<Member> GetActiveMembers()
     {
         return _members.Where(m => m.Status == MemberStatusEnum.Active);
     }
-
-
     public IEnumerable<Member> GetMembersSortedByName()
     {
         return _members.OrderBy(m => m.LastName).ThenBy(m => m.FirstName);
     }
-
-
     public IEnumerable<IGrouping<MemberRoleEnum, Member>> GetMembersByRole()
     {
         return _members.GroupBy(m => m.Role);
     }
-
-
     public Member? GetMemberByMemberNumber(int memberNumber)
     {
         return _members.FirstOrDefault(m => m.MemberNumber == memberNumber);
     }
-
     public bool RemoveMember(int memberNumber)
     {
         var member = GetMemberByMemberNumber(memberNumber);
@@ -74,7 +64,6 @@ public class MemberManager
         }
         return false;
     }
-
 }
 
 
