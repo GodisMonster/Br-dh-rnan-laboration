@@ -27,7 +27,9 @@ namespace Brädhörnan_laboration
             StatusComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberStatusEnum));
             DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
             EventTypeComboBox.ItemsSource = System.Enum.GetValues(typeof(EventTypeEnum));
-            
+            GenreComboBox.ItemsSource= System.Enum.GetValues(typeof(GamegenreEnum));
+
+
 
 
             StatusComboBox.SelectedItem = MemberStatusEnum.Active;
@@ -41,6 +43,7 @@ namespace Brädhörnan_laboration
         }
         private void AddGameButton_Click(object sender, RoutedEventArgs e) // Metoder i Lägg till spel knappen
         {
+
             try
             {
                 if (!int.TryParse(MinPlayersTextBox.Text, out int minPlayers))
@@ -58,17 +61,14 @@ namespace Brädhörnan_laboration
                     MessageBox.Show("Speltid måste vara ett nummer.");
                     return;
                 }
-               //var difficulty =
-               //     DifficultyComboBox.SelectedItem is DifficultyLevelEnum selectedDifficulty ?
-               //     selectedDifficulty : DifficultyLevelEnum.Easy;
 
-                // Implementerar metod från GameManager
                 _gameManager.AddGame(
                    GameNameTextBox.Text,
                            minPlayers,
                            maxPlayers,
                            gameLength,
-                           (DifficultyLevelEnum)DifficultyComboBox.SelectedItem);
+                            (DifficultyLevelEnum)DifficultyComboBox.SelectedItem,
+                            (GamegenreEnum)GenreComboBox.SelectedItem);
 
                 RefreshGameList();
                 ClearGameInputs();
@@ -92,7 +92,8 @@ namespace Brädhörnan_laboration
                  int.Parse(MinPlayersTextBox.Text),
                  int.Parse(MaxPlayersTextBox.Text),
                  int.Parse(GameLengthTextBox.Text),
-                 (DifficultyLevelEnum)DifficultyComboBox.SelectedItem);
+                 (DifficultyLevelEnum)DifficultyComboBox.SelectedItem,
+                 (GamegenreEnum)GenreComboBox.SelectedItem);
 
 
                 RefreshGameList();
@@ -407,6 +408,7 @@ namespace Brädhörnan_laboration
                 MinPlayersTextBox.Text = selectedGame.MinimumNumberOfPlayer.ToString();
                 MaxPlayersTextBox.Text = selectedGame.MaximumNumberOfPlayer.ToString();
                 GameLengthTextBox.Text = selectedGame.AverageGameLength.ToString();
+                GenreComboBox.SelectedItem = selectedGame.Gamegenre;
 
 
                 AddGameButton.Visibility = Visibility.Visible;
@@ -460,6 +462,7 @@ namespace Brädhörnan_laboration
             MaxPlayersTextBox.Clear();
             GameLengthTextBox.Clear();
             DifficultyComboBox.SelectedItem = DifficultyLevelEnum.Easy;
+            GenreComboBox.SelectedItem = GamegenreEnum.Unknown;
         }
         private void ClearGameMeetingInputs()
         {
@@ -471,6 +474,44 @@ namespace Brädhörnan_laboration
             MeetingTimeTextBox.Clear();
             
 
+        }
+        // LINQ-FUNKTIONER
+        private void GroupByGenre_Click(object sender, RoutedEventArgs e)
+        {
+            GamesListBox.Items.Clear();
+
+            var groupedGames = _gameManager.GetAllGames().GroupBy(g => g.Gamegenre);
+
+            foreach(var group in groupedGames)
+            {
+                GamesListBox.Items.Add($"Genre: {group.Key}");
+
+                foreach(var game in group)
+                {
+                    GamesListBox.Items.Add(game);
+                }
+            }
+        }
+        private void FilterStatusMember_Click(object sender, RoutedEventArgs e) 
+        {
+            MembersListBox.Items.Clear();
+
+            var activeMembers = _memberManager.GetActiveMembers();
+            foreach( var member in activeMembers)
+            {
+                MembersListBox.Items.Add(member);
+            }
+        }
+        private void SortMemberByName_Click(object sender, RoutedEventArgs e)
+        {
+            MembersListBox.Items.Clear();
+
+            var sorteringMedlem = _memberManager.GetMembersSortedByName();
+            foreach(var member in sorteringMedlem)
+            {
+                MembersListBox.Items.Add(member);
+            }
+            MessageBox.Show("Sorterade först genom efternamn.");
         }
     }
 }

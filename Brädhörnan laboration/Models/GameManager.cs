@@ -19,16 +19,18 @@
              int minPlayers,
              int maxPlayers,
              int averageGameLength,   
-             DifficultyLevelEnum difficulty) // Lägg till
+             DifficultyLevelEnum difficulty,
+             GamegenreEnum genre) // Lägg till
 
             {
-                var game = new Game(
-                    _nextGameId++,
-                    gameName,
-                    minPlayers,
-                    maxPlayers,
-                    averageGameLength,
-                    difficulty);
+            var game = new Game(
+                _nextGameId++,
+                gameName,
+                minPlayers,
+                maxPlayers,
+                averageGameLength,
+                difficulty,
+                genre);
 
                 _games.Add(game);
 

@@ -24,7 +24,7 @@ public class Game
 
     public DifficultyLevelEnum DifficultyLevel { get; private set; } // = DifficultyLevelEnum.Easy;
 
-    public GamegenreEnum Gamegenre { get; private set; } = GamegenreEnum.Unknown; // Saknar combobox
+    public GamegenreEnum Gamegenre { get; private set; } //  Combobox tillagd
 
     public GameAvailabilityEnum GameAvailability { get; private set; }
         = GameAvailabilityEnum.Available;
@@ -35,7 +35,8 @@ public class Game
         int minPlayers,
         int maxPlayers,
         int averageGameLength,
-        DifficultyLevelEnum difficulty)
+        DifficultyLevelEnum difficulty,
+        GamegenreEnum genre)
     {
         if (gameId <= 0)
             throw new ArgumentOutOfRangeException(nameof(gameId));
@@ -53,6 +54,7 @@ public class Game
         MaximumNumberOfPlayer = maxPlayers;
         AverageGameLength = averageGameLength;
         DifficultyLevel = difficulty;
+        Gamegenre = genre;
 
     
     }
@@ -109,13 +111,15 @@ public class Game
         int minPlayers,
         int maxPlayers,
         int averageGameLength,
-        DifficultyLevelEnum difficulty)
+        DifficultyLevelEnum difficulty,
+        GamegenreEnum genre)
     {
         GameName = gameName;
         MinimumNumberOfPlayer = minPlayers;
         MaximumNumberOfPlayer = maxPlayers;
         AverageGameLength = averageGameLength; 
         DifficultyLevel = difficulty;
+        Gamegenre = genre;
         
     }
 
@@ -162,6 +166,6 @@ public class Game
     public override string ToString()
     {
         return $"{GameName} ({MinimumNumberOfPlayer}-{MaximumNumberOfPlayer} spelare, " +
-               $"{AverageGameLength} min, {DifficultyLevel}) Spel-ID: {GameId}";
+               $"{AverageGameLength} min, {DifficultyLevel}) Genre:{Gamegenre} - Spel-ID: {GameId}";
     }
 }

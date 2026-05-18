@@ -64,8 +64,14 @@
                         <TextBlock Text="Max spelare"/>
                         <TextBox x:Name="MaxPlayersTextBox"
                                  Margin="0,0,0,10"/>
+                        
                         <TextBlock Text="Spelsvårighet"/>
                         <ComboBox x:Name="DifficultyComboBox"
+                                  Margin="0,0,0,10"
+                                  Height="20"/>
+
+                        <TextBlock Text="Genre"/>
+                        <ComboBox x:Name="GenreComboBox"
                                   Margin="0,0,0,10"
                                   Height="20"/>
 
@@ -89,6 +95,12 @@
                                 Height="35"
                                 Margin="0,10,0,0"
                                 Click="RemoveGameButton_Click"/>
+                        
+                        <Button x:Name="GroupByGenre"
+                                Content="Gruppera genom genre"
+                                Height="35"
+                                Margin="0,10,0,0"
+                                Click="GroupByGenre_Click"/>
 
                     </StackPanel>
 
@@ -163,7 +175,19 @@
                                         Height="35"
                                         Margin="0,10,0,0"
                                         Click="RemoveMemberButton_Click"/>
-                         
+
+                        <Button x:Name="SortMemberByName"
+                                Content="Sortera medlemmar A-Ö"
+                                Height="35"
+                                Margin="0,10,0,0"
+                                Click="SortMemberByName_Click"/>
+
+                        <Button x:Name="FilterStatusMember"
+                                  Content="Aktiva medlemmar"
+                                  Height="35"
+                                  Margin="0,10,0,0"
+                                Click="FilterStatusMember_Click"/>
+
                     </StackPanel>
 
                 </Grid>
@@ -224,6 +248,10 @@
                         <Label Content="Välj medlem att lägga till:"/>
                         <ComboBox x:Name="AvailableMembersComboBox" 
                                   Margin="0,0,0,10"/>
+                        
+                        <Label Content="Boka spel för spelträff:"/>
+                        <ComboBox x:Name="AvailableGamesComboBox"
+                                  Margin="0,0,0,10"/> 
 
 
                         <Button Content="Skapa träff"
