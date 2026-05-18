@@ -183,7 +183,8 @@
                     <!-- Lista -->
                     <ListBox x:Name="MeetingsListBox"
                              Grid.Column="0"
-                             Margin="0,0,10,0"/>
+                             Margin="0,0,10,0"
+                             SelectionChanged="MeetingsListBox_SelectionChanged"/>
 
                     <!-- Form -->
                     <StackPanel Grid.Column="1">
@@ -191,37 +192,56 @@
                         <TextBlock Text="Skapa spelträff"
                                    FontSize="18"
                                    FontWeight="Bold"
-                                   Margin="0,0,0,10"/>
+                                   Margin="0,0,0,0"/>
 
                         <TextBlock Text="Plats"/>
                         <TextBox x:Name="LocationTextBox"
-                                 Margin="0,0,0,10"/>
+                                 Margin="0,0,0,5"/>
 
                         <TextBlock Text="Max deltagare"/>
                         <TextBox x:Name="MaxParticipantsTextBox"
-                                 Margin="0,0,0,10"/>
+                                 Margin="0,0,0,5"/>
+                        
                         <TextBlock Text="Ansvarig"/>
                         <TextBox x:Name="ResponsibleTextBox"
-                                 Margin="0,0,0,10"/>
+                                 Margin="0,0,0,5"/>
 
                         <TextBlock Text="Eventtyp"/>
                         <ComboBox x:Name="EventTypeComboBox"
-                                 Margin="0,0,0,20"
+                                 Margin="0,0,0,5"
                                   Height="20"/>
                         
                         <TextBlock Text="Datum"/>
                         <DatePicker x:Name="MeetingDatePicker"
-                                 Margin="0,0,0,10"/>
+                                 Margin="0,0,0,5"/>
 
 
                         <TextBlock Text="Tid (HH:mm)"/>
                         <TextBox x:Name="MeetingTimeTextBox"
-                                      Margin="0,0,0,10"/>
+                                      Margin="0,0,0,5"/>
+
+                        <Label Content="Välj medlem att lägga till:"/>
+                        <ComboBox x:Name="AvailableMembersComboBox" 
+                                  Margin="0,0,0,10"/>
 
 
                         <Button Content="Skapa träff"
-                                Height="35"
+                                Height="25"
+                                Margin="0,0,0,5"
                                 Click="CreateMeetingButton_Click"/>
+                        
+                        <Label Content="Deltagare i vald spelträff:"/>
+                        <ListBox x:Name="MeetingParticipantsListBox" Margin="0,0,0,10" Height="150"/>
+
+                        <Button x:Name="AddParticipantButton" 
+                        Content="Lägg till deltagare i träff" 
+                                Height="25"
+                                Margin="0,0,0,10"
+                        Click="AddParticipantButton_Click"/>
+
+                        <Button Content="Ta bort deltagare från träff"
+                               Height="25"
+                               Click="UnRegisterParticipant_Click"/>
 
                     </StackPanel>
 

@@ -2,6 +2,7 @@
 using Brädhörnan_laboration.Models;
 using Brädhörnan_laboration.Services;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,7 +17,8 @@ namespace Brädhörnan_laboration
         private readonly GameMeetingManager _meetingManager = new();
         private Member? _selectedMember = null;
         private Game? _selectedGame = null;
-
+        private GameMeeting _selectedMeeting = null;
+       
         public MainWindow()
         {
             InitializeComponent();
@@ -25,8 +27,13 @@ namespace Brädhörnan_laboration
             StatusComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberStatusEnum));
             DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
             EventTypeComboBox.ItemsSource = System.Enum.GetValues(typeof(EventTypeEnum));
+
+
             StatusComboBox.SelectedItem = MemberStatusEnum.Active;
             RollComboBox.SelectedItem = MemberRoleEnum.Member;
+
+            RefreshAvailableMembers();
+
 
         }
         
@@ -53,6 +60,7 @@ namespace Brädhörnan_laboration
                     DifficultyComboBox.SelectedItem is DifficultyLevelEnum selectedDifficulty ?
                     selectedDifficulty : DifficultyLevelEnum.Unknown;
 
+                // Implementerar metod från GameManager
                  _gameManager.AddGame(
                     GameNameTextBox.Text,
                             minPlayers,
@@ -105,7 +113,7 @@ namespace Brädhörnan_laboration
 
             try
             {
-                bool removed = _gameManager.RemoveGame(_selectedGame.GameId);
+                bool removed = _gameManager.RemoveGame(_selectedGame.GameId); // Metod från annan klass
 
                 if( removed)
                 {
@@ -155,10 +163,11 @@ namespace Brädhörnan_laboration
                     EmailTextBox.Text,
                     phone,
                     (MemberStatusEnum)StatusComboBox.SelectedItem, 
-                    (MemberRoleEnum)RollComboBox.SelectedItem);   
+                    (MemberRoleEnum)RollComboBox.SelectedItem);
 
-                
+               
                 RefreshMemberList();
+                RefreshAvailableMembers();
                 ClearMemberInputs();
 
                 MessageBox.Show("Medlem skapad!");
@@ -218,9 +227,7 @@ namespace Brädhörnan_laboration
                 }
             }
         }
-        
-
-
+     
         private void CreateMeetingButton_Click(object sender, RoutedEventArgs e) // Metoder i Skapa möte knappen
         {
             try
@@ -261,6 +268,72 @@ namespace Brädhörnan_laboration
                 MessageBox.Show(ex.Message);
             }
         }
+        private void AddParticipantButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedMeeting == null)
+            {
+                MessageBox.Show("Välj en spelträff.");
+                return;
+            }
+            if (AvailableMembersComboBox.SelectedItem is not Member selectedMember)
+            {
+                MessageBox.Show("Välj en medlem att lägga till.");
+                return;
+            }
+            try
+            {
+                var (success, message) = _meetingManager.RegisterParticipant(
+                    _selectedMeeting.GameMeetingId,
+                    selectedMember);
+
+                if (success)
+                {
+                    RefreshMeetingParticipantsList();
+                    RefreshMeetingList();
+                }
+
+                MessageBox.Show(message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ett oväntat fel inträffade: {ex.Message}");
+            }
+        }
+        private void UnRegisterParticipant_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedMeeting == null)
+            {
+                MessageBox.Show("Välj en spelträff först.");
+                return;
+            }
+
+            if (MeetingParticipantsListBox.SelectedItem is not Member selectedParticipant)
+            {
+                MessageBox.Show("Välj en deltagare i deltagarlistan att ta bort.");
+                return;
+            }
+
+            try
+            {
+                var (success, message) = _meetingManager.UnregisterParticipant(
+                _selectedMeeting.GameMeetingId,
+                 selectedParticipant);
+
+                if (success)
+                {
+                    RefreshMeetingParticipantsList();
+                    RefreshMeetingList();
+                }
+
+                MessageBox.Show(message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ett oväntat fel inträffade: {ex.Message}");
+            }
+        }
+        
+        
 
        // Hjälpfunktioner för snyggare UI
         private void ClearMemberInputs()
@@ -284,7 +357,7 @@ namespace Brädhörnan_laboration
         private void RefreshMemberList()
         {
             MembersListBox.Items.Clear();
-            foreach(var member in _memberManager.GetAllMembers())
+            foreach(var member in _memberManager.GetAllMembers()) // Metod som hämtas från klass
             {
                 MembersListBox.Items.Add(member);
             }
@@ -293,7 +366,7 @@ namespace Brädhörnan_laboration
         {
             GamesListBox.Items.Clear();
 
-            foreach (var game in _gameManager.GetAllGames())
+            foreach (var game in _gameManager.GetAllGames()) // Metod som hämtas från klass
             {
                 GamesListBox.Items.Add(game);
             }
@@ -305,20 +378,38 @@ namespace Brädhörnan_laboration
             UpdateMemberButton.Visibility = Visibility.Collapsed;
             MembersListBox.SelectedItem = null;
         }
+      
         private void RefreshMeetingList()
         {
-             MeetingsListBox.Items.Clear();
+            MeetingsListBox.Items.Clear();
 
-           foreach (var meeting in _meetingManager.GetAllMeetings())
-           {
+            foreach (var meeting in _meetingManager.GetAllMeetings()) // Metod som hämtas från klass
+            {
                 MeetingsListBox.Items.Add(meeting);
-           }
+            }
         }
+        private void RefreshMeetingParticipantsList()
+        {
+            MeetingParticipantsListBox.Items.Clear();
 
+            if (_selectedMeeting == null)
+                return;
 
+            foreach (var participant in _selectedMeeting.Participants)
+            {
+                MeetingParticipantsListBox.Items.Add(participant);
+            }
+        }   
+    
+        private void RefreshAvailableMembers()
+        {
+            AvailableMembersComboBox.Items.Clear();
 
-
-        // Listboxar
+            foreach (var member in _memberManager.GetAllMembers())
+            {
+                AvailableMembersComboBox.Items.Add(member);
+            }
+        }
 
         private void GamesListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
@@ -357,7 +448,15 @@ namespace Brädhörnan_laboration
                 UpdateMemberButton.Visibility = Visibility.Visible;
             }
         }
-        
+        private void MeetingsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MeetingsListBox.SelectedItem is GameMeeting selectedMeeting)
+            {
+                _selectedMeeting = selectedMeeting;
+
+                RefreshMeetingParticipantsList();
+            }
+        }
     }
 
 

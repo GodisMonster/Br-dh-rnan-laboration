@@ -114,7 +114,13 @@ public class GameMeeting
         return Participants.Any(
             m => m.MemberNumber == member.MemberNumber);
     }
+
+    public override string ToString()
+    {
+        return $"{DateAndTime:yyyy-MM-dd HH:mm} - {Location} - {EventType} ({Participants.Count}/{MaximumNumberOfParticipants} deltagare)";
+    }
 }
+
 
 
 
