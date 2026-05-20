@@ -186,7 +186,7 @@
                                   Content="Aktiva medlemmar"
                                   Height="35"
                                   Margin="0,10,0,0"
-                                Click="FilterStatusMember_Click"/>
+                                Click="FilterStatusMemberButton_Click"/>
 
                     </StackPanel>
 
@@ -225,16 +225,16 @@
                         <TextBlock Text="Max deltagare"/>
                         <TextBox x:Name="MaxParticipantsTextBox"
                                  Margin="0,0,0,5"/>
-<!--Combobox för att visa ansvarig -->
+
                         <Label Content="Ansvarig:" />
                         <ComboBox x:Name="ResponsibleComboBox" 
                                 DisplayMemberPath="FullName"
-                                  Margin="0,0,0,10"/> 
+                                  Margin="0,0,0,5"/> 
 
                         <TextBlock Text="Eventtyp"/>
                         <ComboBox x:Name="EventTypeComboBox"
                                  Margin="0,0,0,5"
-                                  Height="20"/>
+                                  />
                         
                         <TextBlock Text="Datum"/>
                         <DatePicker x:Name="MeetingDatePicker"
@@ -247,11 +247,11 @@
 
                         <Label Content="Välj medlem att lägga till:"/>
                         <ComboBox x:Name="AvailableMembersComboBox" 
-                                  Margin="0,0,0,10"/>
+                                  Margin="0,0,0,5"/>
                         
-                        <Label Content="Boka spel för spelträff:"/>
+                        <Label Content="Tillgängliga spel:"/>
                         <ComboBox x:Name="AvailableGamesComboBox"
-                                  Margin="0,0,0,10"/> 
+                                  Margin="0,0,0,5"/> 
 
 
                         <Button Content="Skapa träff"
@@ -260,7 +260,12 @@
                                 Click="CreateMeetingButton_Click"/>
                         
                         <Label Content="Deltagare i vald spelträff:"/>
-                        <ListBox x:Name="MeetingParticipantsListBox" Margin="0,0,0,10" Height="150"/>
+                        <ListBox x:Name="MeetingParticipantsListBox" Margin="0,0,0,5" Height="75"/>
+
+                        <Label Content="Bokade spel:"/>
+                        <ListBox x:Name="PlannedGamesListBox" Margin="0,0,0,30" Height="75"/>
+
+
 
                         <Button x:Name="AddParticipantButton" 
                         Content="Lägg till deltagare i träff" 
@@ -270,7 +275,18 @@
 
                         <Button Content="Ta bort deltagare från träff"
                                Height="25"
+                                Margin="0,0,0,10"
                                Click="UnRegisterParticipant_Click"/>
+
+                        <Button Content="Boka spel"
+                                Height="25"
+                                Margin="0,0,0,10"
+                                Click="BookGame_Click"/>
+
+                        <Button Content="Avboka spel"
+                                Height="25"
+                                Margin="0,0,0,10"
+                                Click="UnregisterGame_Click"/>
 
                     </StackPanel>
 

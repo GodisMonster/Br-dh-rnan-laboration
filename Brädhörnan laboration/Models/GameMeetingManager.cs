@@ -142,14 +142,12 @@ public class GameMeetingManager
         if (meeting.Participants.Any())
             return false;
         var gamesToRemove = meeting.PlannedGames.ToList();
+        foreach (var game in gamesToRemove)
         {
-            
-            foreach (var game in meeting.PlannedGames)
-            {
-                meeting.RemovePlannedGame(game);
-            }
-           
+            meeting.RemovePlannedGame(game);
         }
         return _meetings.Remove(meeting);
+
+
     }
 }

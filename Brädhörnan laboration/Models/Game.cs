@@ -114,6 +114,11 @@ public class Game
         DifficultyLevelEnum difficulty,
         GamegenreEnum genre)
     {
+        ValidateGameName(gameName);
+        ValidatePlayerCounts(minPlayers, maxPlayers);
+        if (averageGameLength <= 0)
+            throw new ArgumentOutOfRangeException(nameof(averageGameLength), "Speltid måste anges");
+
         GameName = gameName;
         MinimumNumberOfPlayer = minPlayers;
         MaximumNumberOfPlayer = maxPlayers;

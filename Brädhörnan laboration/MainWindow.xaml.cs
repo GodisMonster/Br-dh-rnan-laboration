@@ -28,13 +28,14 @@ namespace Brädhörnan_laboration
             DifficultyComboBox.ItemsSource = System.Enum.GetValues(typeof(DifficultyLevelEnum));
             EventTypeComboBox.ItemsSource = System.Enum.GetValues(typeof(EventTypeEnum));
             GenreComboBox.ItemsSource= System.Enum.GetValues(typeof(GamegenreEnum));
-
-
+            RefreshAvailableGames();
+            
 
 
             StatusComboBox.SelectedItem = MemberStatusEnum.Active;
             RollComboBox.SelectedItem = MemberRoleEnum.Member;
             DifficultyComboBox.SelectedItem = DifficultyLevelEnum.Easy;
+            GenreComboBox.SelectedItem = GamegenreEnum.Unknown; 
 
             RefreshAvailableMembers();
 
@@ -71,6 +72,7 @@ namespace Brädhörnan_laboration
                             (GamegenreEnum)GenreComboBox.SelectedItem);
 
                 RefreshGameList();
+                RefreshAvailableGames();
                 ClearGameInputs();
 
                 MessageBox.Show("Spelet skapades!");
@@ -267,6 +269,7 @@ namespace Brädhörnan_laboration
 
                 RefreshMeetingList();
                 ClearGameMeetingInputs();
+                RefreshPlannedGamesList();
 
                 MessageBox.Show("Spelträff skapad!");
             }
@@ -356,6 +359,43 @@ namespace Brädhörnan_laboration
                 GamesListBox.Items.Add(game);
             }
         }
+        private void RefreshAvailableGames()
+{
+    
+    AvailableGamesComboBox.Items.Clear();
+
+    var allGames = _gameManager.GetAllGames();
+    if (allGames == null) return;
+
+  
+    if (_selectedMeeting == null)
+    {
+        foreach (var game in allGames)
+        {
+            AvailableGamesComboBox.Items.Add(game);
+        }
+        return; 
+    }
+
+   
+    if (_selectedMeeting.PlannedGames == null)
+    {
+        foreach (var game in allGames)
+        {
+            AvailableGamesComboBox.Items.Add(game);
+        }
+        return; 
+    }
+
+   
+    var availableGames = allGames.Where(game => 
+        !_selectedMeeting.PlannedGames.Any(pg => pg.GameId == game.GameId));
+
+    foreach (var game in availableGames)
+    {
+        AvailableGamesComboBox.Items.Add(game);
+    }
+}
         private void ResetMemberForm()
         {
             _selectedMember = null;
@@ -368,7 +408,7 @@ namespace Brädhörnan_laboration
         {
             MeetingsListBox.Items.Clear();
 
-            foreach (var meeting in _meetingManager.GetAllMeetings()) // Metod som hämtas från klass
+            foreach (var meeting in _meetingManager.GetAllMeetings())
             {
                 MeetingsListBox.Items.Add(meeting);
             }
@@ -397,6 +437,92 @@ namespace Brädhörnan_laboration
                 ResponsibleComboBox.Items.Add(member);
             }
         }
+        private void RefreshPlannedGamesList()
+        {
+            PlannedGamesListBox.Items.Clear();
+
+            if (_selectedMeeting == null)
+                return;
+
+            foreach (var game in _selectedMeeting.PlannedGames)
+            {
+                PlannedGamesListBox.Items.Add(game);
+            }
+        }
+        private void BookGame_Click(object sender, RoutedEventArgs e)
+        {
+
+         if (_selectedMeeting == null)
+            {
+                MessageBox.Show("Välj en spelträff.");
+                return;
+            }
+         if(AvailableGamesComboBox.SelectedItem is not Game selectedGame)
+            {
+                MessageBox.Show("Välj ett spel att boka.");
+                return;
+            }
+         try
+            {
+                var (success, message) = _meetingManager.AddGameToMeeting(
+           _selectedMeeting.GameMeetingId,
+           selectedGame);
+
+                if (success)
+                {
+                    RefreshPlannedGamesList();
+                    RefreshAvailableGames(); 
+                    MessageBox.Show($"Bokningen lyckades: {message}");
+                }
+                else
+                {
+                    MessageBox.Show(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fel vid bokning: {ex.Message}");
+            }
+        }
+            
+
+        
+        private void UnregisterGame_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedMeeting == null)
+            {
+                MessageBox.Show("Välj en spelträff först.");
+                return;
+            }
+
+            if (PlannedGamesListBox.SelectedItem is not Game selectedGame)
+            {
+                MessageBox.Show("Välj ett spel att avboka.");
+                return;
+            }
+
+            try
+            {
+                var (success, message) = _meetingManager.RemoveGameFromMeeting(
+                    _selectedMeeting.GameMeetingId,
+                    selectedGame);
+
+                if (success)
+                {
+                    RefreshAvailableGames();      
+                    RefreshPlannedGamesList();   
+                    MessageBox.Show($"Avbokning lyckades: {message}");
+                }
+                else
+                {
+                    MessageBox.Show(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fel vid avbokning: {ex.Message}");
+            }
+        }
 
         private void GamesListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
@@ -415,7 +541,6 @@ namespace Brädhörnan_laboration
                 UpdateGameButton.Visibility = Visibility.Visible;
 
 
-                MessageBox.Show(selectedGame.ToString());
             }
         }
         private void MemberListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -443,6 +568,8 @@ namespace Brädhörnan_laboration
                 _selectedMeeting = selectedMeeting;
 
                 RefreshMeetingParticipantsList();
+                RefreshPlannedGamesList();
+                RefreshAvailableGames();
             }
         }
         // Hjälpfunktioner för snyggare UI
@@ -492,7 +619,7 @@ namespace Brädhörnan_laboration
                 }
             }
         }
-        private void FilterStatusMember_Click(object sender, RoutedEventArgs e) 
+        private void FilterStatusMemberButton_Click(object sender, RoutedEventArgs e) 
         {
             MembersListBox.Items.Clear();
 
