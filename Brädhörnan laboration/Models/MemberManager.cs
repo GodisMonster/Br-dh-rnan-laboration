@@ -12,10 +12,11 @@ namespace Brädhörnan_laboration.Services;
 
 public class MemberManager
 {
-    private readonly List<Member> _members = new List<Member>(); // varför ska den vara readonly?
+    private readonly List<Member> _members = new List<Member>();
 
     private int _nextMemberNumber = 1;
     public Member RegisterNewMember(
+    MemberRoleEnum requester,
     string firstName,
     string lastName,
     string email,
@@ -23,6 +24,13 @@ public class MemberManager
     MemberStatusEnum status,
     MemberRoleEnum role)
     {
+        if (requester  != MemberRoleEnum.Admin)
+        {
+            throw new UnauthorizedAccessException("Endast admin kan skapa medlem.");
+        }
+        
+           
+        
         var member = new Member(
             _nextMemberNumber++,  
             firstName,            

@@ -1,4 +1,5 @@
-﻿using Brädhörnan_laboration.Enum;
+﻿using Brädhörnan_laboration.Data;
+using Brädhörnan_laboration.Enum;
 using Brädhörnan_laboration.Models;
 using Brädhörnan_laboration.Services;
 using System;
@@ -18,10 +19,15 @@ namespace Brädhörnan_laboration
         private Member? _selectedMember = null;
         private Game? _selectedGame = null;
         private GameMeeting _selectedMeeting = null;
+        
 
         public MainWindow()
         {
             InitializeComponent();
+            _memberManager = DemoData.MembersDemoData();
+            RefreshMemberList();
+            _gameManager = DemoData.GameDemoData();
+            RefreshGameList();
 
             RollComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberRoleEnum));
             StatusComboBox.ItemsSource = System.Enum.GetValues(typeof(MemberStatusEnum));
@@ -38,8 +44,7 @@ namespace Brädhörnan_laboration
             GenreComboBox.SelectedItem = GamegenreEnum.Unknown; 
 
             RefreshAvailableMembers();
-
-
+   
 
         }
         private void AddGameButton_Click(object sender, RoutedEventArgs e) // Metoder i Lägg till spel knappen
@@ -161,7 +166,7 @@ namespace Brädhörnan_laboration
 
                 string phone = PhoneTextBox.Text ?? "";
                 // Metod från MemberManager
-                var member = _memberManager.RegisterNewMember(
+                var member = _memberManager.RegisterNewMember(MemberRoleEnum.Admin,
                     FirstNameTextBox.Text,
                     LastNameTextBox.Text,
                     EmailTextBox.Text,
@@ -300,6 +305,7 @@ namespace Brädhörnan_laboration
                 {
                     RefreshMeetingParticipantsList();
                     RefreshMeetingList();
+                    RefreshAvailableMembers();
                 }
 
                 MessageBox.Show(message);
@@ -333,6 +339,7 @@ namespace Brädhörnan_laboration
                 {
                     RefreshMeetingParticipantsList();
                     RefreshMeetingList();
+                    RefreshAvailableMembers();
                 }
 
                 MessageBox.Show(message);
@@ -350,6 +357,52 @@ namespace Brädhörnan_laboration
                 MembersListBox.Items.Add(member);
             }
         }
+        private void RefreshAvailableMembers()
+        {
+            AvailableMembersComboBox.Items.Clear();
+            ResponsibleComboBox.Items.Clear();
+
+            var allMembers = _memberManager.GetAllMembers();
+            if (allMembers == null) return;
+
+            // Om ingen spelträff är vald, visa alla medlemmar
+            if (_selectedMeeting == null)
+            {
+                foreach (var member in allMembers)
+                {
+                    AvailableMembersComboBox.Items.Add(member);
+                    ResponsibleComboBox.Items.Add(member);
+                }
+                return;
+            }
+
+            // Om spelträffen inte har några deltagare, visa alla
+            if (_selectedMeeting.Participants == null)
+            {
+                foreach (var member in allMembers)
+                {
+                    AvailableMembersComboBox.Items.Add(member);
+                    ResponsibleComboBox.Items.Add(member);
+                }
+                return;
+            }
+
+            // FILTRERA: Visa bara medlemmar som INTE är anmälda
+            var availableMembers = allMembers.Where(member =>
+                !_selectedMeeting.Participants.Any(p => p.MemberNumber == member.MemberNumber));
+
+            // Lägg till tillgängliga medlemmar i AvailableMembersComboBox
+            foreach (var member in availableMembers)
+            {
+                AvailableMembersComboBox.Items.Add(member);
+            }
+
+            // ResponsibleComboBox ska ALLTID visa ALLA medlemmar (flyttad utanför if-satsen!)
+            foreach (var member in allMembers)
+            {
+                ResponsibleComboBox.Items.Add(member);
+            }
+        }
         private void RefreshGameList()
         {
             GamesListBox.Items.Clear();
@@ -360,22 +413,22 @@ namespace Brädhörnan_laboration
             }
         }
         private void RefreshAvailableGames()
-{
+        {
     
-    AvailableGamesComboBox.Items.Clear();
+            AvailableGamesComboBox.Items.Clear();
 
-    var allGames = _gameManager.GetAllGames();
-    if (allGames == null) return;
+            var allGames = _gameManager.GetAllGames();
+            if (allGames == null) return;
 
   
-    if (_selectedMeeting == null)
-    {
-        foreach (var game in allGames)
-        {
-            AvailableGamesComboBox.Items.Add(game);
-        }
-        return; 
-    }
+            if (_selectedMeeting == null)
+            {
+                foreach (var game in allGames)
+                {
+                    AvailableGamesComboBox.Items.Add(game);
+                }
+                return; 
+            }
 
    
     if (_selectedMeeting.PlannedGames == null)
@@ -423,18 +476,6 @@ namespace Brädhörnan_laboration
             foreach (var participant in _selectedMeeting.Participants)
             {
                 MeetingParticipantsListBox.Items.Add(participant);
-            }
-        }
-
-        private void RefreshAvailableMembers()
-        {
-            AvailableMembersComboBox.Items.Clear();
-            ResponsibleComboBox.Items.Clear();
-
-            foreach (var member in _memberManager.GetAllMembers())
-            {
-                AvailableMembersComboBox.Items.Add(member);
-                ResponsibleComboBox.Items.Add(member);
             }
         }
         private void RefreshPlannedGamesList()
@@ -570,6 +611,7 @@ namespace Brädhörnan_laboration
                 RefreshMeetingParticipantsList();
                 RefreshPlannedGamesList();
                 RefreshAvailableGames();
+                RefreshAvailableMembers();  // LÄGG TILL DENNA RAD
             }
         }
         // Hjälpfunktioner för snyggare UI
