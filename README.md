@@ -7,8 +7,11 @@ Ett C#-baserat projekt för att hantera medlemmar, spel och spelträffar för en
 - Uppdatera befintliga medlemmar
 - Ta bort befintliga medlemmar
 - Skapa spelträffar
-- Reserver spel för spelträff
-- LINQ funktioner för att filtrera medlemar efter status och sortera medlemmar i alfabetisk ordning samt gruppering av spel efter genre
+- Reserverar spel för spelträff
+- Lägga till nya spel
+- Ta bort spel
+- Uppdatera spel
+- Använda LINQ funktioner för att filtrera medlemar efter status och sortera medlemmar i alfabetisk ordning samt gruppering av spel efter genre
 
   ## Tekniker
   - C#
@@ -17,7 +20,7 @@ Ett C#-baserat projekt för att hantera medlemmar, spel och spelträffar för en
   - Objektorienterad programmering (OOP)
   - LINQ
   - Enum-typer
-  - WPF
+ 
 
   ## Domänmodell
 
@@ -33,7 +36,7 @@ Ett C#-baserat projekt för att hantera medlemmar, spel och spelträffar för en
  ### Relationer
  - Ett 'GameMeeting' kan ha flera 'Member' som deltagare.
  - Ett 'GameMeeting' kan ha flera 'Game' som planerade spel.
- - Manager-klasserna ansvarar för skapande, sökning filtrering och borttagning.
+ - Manager-klasserna ansvarar för skapande, sökning, filtrering och borttagning.
 
    ## Installation
 
@@ -46,19 +49,19 @@ Ett C#-baserat projekt för att hantera medlemmar, spel och spelträffar för en
 
 Exempel på hur ett spel kan skapas:
 
-CSHARP-
+C#
 var game = gameManager.AddGame(
     "Texas Hold'em",
     2,
     9,
     75,
     DifficultyLevelEnum.Medium,
-    GamegenreEnum.Strategy);
+    GameGenreEnum.Strategy);
 
 
-Exempel på hur en medlemmar registreras:
+Exempel på hur en medlem registreras:
 
-CSHARP-
+C#
 var member = memberManager.RegisterNewMember(
     "Franco",
     "Ortega",
