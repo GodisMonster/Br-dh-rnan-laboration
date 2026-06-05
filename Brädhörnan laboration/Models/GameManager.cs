@@ -6,68 +6,63 @@
         using System.Text;
         using System.Threading.Tasks;
 
-        namespace Brädhörnan_laboration.Models
+namespace Brädhörnan_laboration.Models
+{
+    public class GameManager
+    {
+        private readonly List<Game> _games = new();
+
+        private int _nextGameId = 1;
+
+        public Game AddGame(
+         string gameName,
+         int minPlayers,
+         int maxPlayers,
+         int averageGameLength,
+         DifficultyLevelEnum difficulty,
+         GamegenreEnum genre)
+
         {
-            public class GameManager
-            {
-                private readonly List<Game> _games = new List<Game>();
+            var game = new Game(
+                _nextGameId++,
+                gameName,
+                minPlayers,
+                maxPlayers,
+                averageGameLength,
+                difficulty,
+                genre);
 
-                private int _nextGameId = 1;
+            _games.Add(game);
 
-                public Game AddGame(
-                 string gameName,
-                 int minPlayers,
-                 int maxPlayers,
-                 int averageGameLength,   
-                 DifficultyLevelEnum difficulty,
-                 GamegenreEnum genre) // Lägg till
+            return game;
+        }
+        public IEnumerable<Game> GetAllGames()
+        {
+            return _games.ToList();
+        }
+        public Game? GetGameById(int gameId)
+        {
+            return _games.FirstOrDefault(g => g.GameId == gameId);
+        }
+        public IEnumerable<Game> GetAvailableGames()
+        {
+            return _games.Where(g => g.IsAvailableForBooking());
+        }
 
-                {
-                var game = new Game(
-                    _nextGameId++,
-                    gameName,
-                    minPlayers,
-                    maxPlayers,
-                    averageGameLength,
-                    difficulty,
-                    genre);
-
-                    _games.Add(game);
-
-                    return game;
-                }
-                public IEnumerable<Game> GetAllGames()
-                {
-                    return _games.ToList();
-                }
-                public Game? GetGameById(int gameId)
-                {
-                    return _games.FirstOrDefault(g => g.GameId == gameId);
-                }
-                public IEnumerable<Game> GetAvailableGames()
-            {
-                return _games.Where(g => g.GameAvailability == GameAvailabilityEnum.Available);
-            }
-        //public IEnumerable<Game> GetGamesForPlayerCount(int numberOfPlayers)
-        //{
-        //    return _games.Where(g => g.IsSuitableForPlayerCount(numberOfPlayers));
-        //}
-        //public IEnumerable<Game> GetGamesSortedByName()
-        //    {
-        //        return _games.OrderBy(g => g.GameName);
-        //    }
-        //    public IEnumerable<IGrouping<GamegenreEnum, Game>> GetGamesByGenre()
-        //    {
-        //        return _games.GroupBy(g => g.Gamegenre);
-        //    }
         public bool RemoveGame(int gameId)
         {
             var game = GetGameById(gameId);
+            if (game == null)
+                return false;
 
-            return game != null && _games.Remove(game);
+            if (!game.IsAvailableForBooking())
+                throw new InvalidOperationException(
+                    $"'{game.GameName}' är reserverat för en spelträff och kan inte tas bort.");
+           
+            return _games.Remove(game);
 
 
         }
 
     }
-        }
+}          

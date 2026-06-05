@@ -12,7 +12,7 @@ namespace Brädhörnan_laboration.Services;
 
 public class MemberManager
 {
-    private readonly List<Member> _members = new List<Member>();
+    private readonly List<Member> _members = new();
 
     private int _nextMemberNumber = 1;
     public Member RegisterNewMember(
@@ -28,9 +28,7 @@ public class MemberManager
         {
             throw new UnauthorizedAccessException("Endast admin kan skapa medlem.");
         }
-        
-           
-        
+          
         var member = new Member(
             _nextMemberNumber++,  
             firstName,            

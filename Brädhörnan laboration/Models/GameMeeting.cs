@@ -20,7 +20,7 @@ public class GameMeeting
     public int MaximumNumberOfParticipants { get; private set; }
     public Member? Responsible { get; private set; }
     public EventTypeEnum EventType { get; private set; }
-    public string Information { get; private set; } = "";
+    // public string Information { get; private set; } = ""; // Ej implementerad 
 
     public IReadOnlyCollection<Game> PlannedGames => _plannedGames.AsReadOnly();
     public IReadOnlyCollection<Member> Participants => _participants.AsReadOnly();
@@ -37,7 +37,7 @@ public class GameMeeting
     {
         if (string.IsNullOrWhiteSpace(location))
             throw new ArgumentException(
-                "Mötesplats kan inte vara tomt");
+                "Mötesplats måste anges");
 
         if (maximumNumberOfParticipants < 1)
             throw new ArgumentException(
@@ -46,6 +46,10 @@ public class GameMeeting
         if (dateAndTime < DateTime.Now)
             throw new ArgumentException(
                 "Kan inte skapa möten bakåt i tiden");
+
+        if (gameMeetingId < 1)
+            throw new ArgumentOutOfRangeException(
+                "Ogiltigt mötes-ID");
 
         GameMeetingId = gameMeetingId;
         DateAndTime = dateAndTime;
@@ -74,16 +78,16 @@ public class GameMeeting
             throw new InvalidOperationException(
                 "Medlemmen är inte anmäld till träffen.");
     }
-    public int GetParticipantCount()
-    {
-        return _participants.Count;
-    }
+    //public int GetParticipantCount() // Redundant?
+    //{
+    //    return _participants.Count;
+    //}
 
-    public IEnumerable<string> GetParticipantNames() 
-    {
-            return _participants.Select(
-                m => $"{m.FirstName} {m.LastName}");    
-    }
+    //public IEnumerable<string> GetParticipantNames() // Ej implementerad?
+    //{
+    //        return _participants.Select(
+    //            m => $"{m.FirstName} {m.LastName}");    
+    //}
     public void AddPlannedGame(Game game)
     {
         if (!game.IsAvailableForBooking())
@@ -94,9 +98,9 @@ public class GameMeeting
             throw new InvalidOperationException(
                 "Spelet är redan reserverat för denna träff.");
 
-               game.MarkAsReserved();
+        game.MarkAsReserved();
 
-               _plannedGames.Add(game);
+        _plannedGames.Add(game);
     }
     public void RemovePlannedGame(Game game)
     {
@@ -117,15 +121,11 @@ public class GameMeeting
 
     public override string ToString()
     {
-
-
-        return $"{DateAndTime:yyyy-MM-dd HH:mm} - " +
-            $"Plats: {Location} -" +
-            $"Eventtyp: {EventType} "+
+     return $"{DateAndTime:yyyy-MM-dd HH:mm} - " +
+            $"Plats: {Location} - " +
+            $"Eventtyp: {EventType} - "+
             $"({Participants.Count}/{MaximumNumberOfParticipants} deltagare) - " +
-            $"Ansvarig: {(Responsible != null ? $"{Responsible.FirstName}" : "Ingen ansvarig -")}";
-           
-       
+            $"Ansvarig: {(Responsible != null ? Responsible.FirstName : "Ingen ansvarig")}";    
     }
 }
 

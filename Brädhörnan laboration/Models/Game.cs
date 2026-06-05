@@ -22,9 +22,9 @@ public class Game
 
     public string GameDescription { get; private set; } = string.Empty;
 
-    public DifficultyLevelEnum DifficultyLevel { get; private set; } // = DifficultyLevelEnum.Easy;
+    public DifficultyLevelEnum DifficultyLevel { get; private set; } 
 
-    public GamegenreEnum Gamegenre { get; private set; } //  Combobox tillagd
+    public GamegenreEnum Gamegenre { get; private set; } 
 
     public GameAvailabilityEnum GameAvailability { get; private set; }
         = GameAvailabilityEnum.Available;
@@ -40,8 +40,7 @@ public class Game
     {
         if (gameId <= 0)
             throw new ArgumentOutOfRangeException(nameof(gameId));
-
-        ValidateGameName(gameName);
+ 
         ValidatePlayerCounts(minPlayers, maxPlayers);
 
         if (averageGameLength <= 0)
@@ -49,16 +48,14 @@ public class Game
                 nameof(averageGameLength), "Speltid måste anges");
 
         GameId = gameId;
-        GameName = gameName.Trim();
+        GameName = ValidateGameName(gameName);
         MinimumNumberOfPlayer = minPlayers;
         MaximumNumberOfPlayer = maxPlayers;
         AverageGameLength = averageGameLength;
         DifficultyLevel = difficulty;
         Gamegenre = genre;
-
-    
     }
-    private static void ValidateGameName(string gameName)
+    private static string ValidateGameName(string gameName)
     {
         if (string.IsNullOrWhiteSpace(gameName))
             throw new ArgumentException(
@@ -67,8 +64,9 @@ public class Game
         gameName = gameName.Trim();
 
         if (gameName.Length < 2 || gameName.Length > 100)
-            throw new ArgumentException(
+            throw new ArgumentException( 
                 "Spelnamn måste vara mellan 2 och 100 tecken");
+        return gameName;
     }
     private static void ValidatePlayerCounts(int min, int max)
     {
@@ -81,31 +79,15 @@ public class Game
         if (max > 16)
             throw new ArgumentOutOfRangeException(nameof(max), "Orimligt många spelare.");
     }
+   //public void UpdateDescription(string description) // Ej implementerad i UI:t
+   // {
+   //    var trimmed = description?.Trim() ?? string.Empty;
 
-    public void ChangePlayerCount(int minPlayers, int maxPlayers)
-    {
-        ValidatePlayerCounts(minPlayers, maxPlayers);
-
-        MinimumNumberOfPlayer = minPlayers;
-        MaximumNumberOfPlayer = maxPlayers;
-    }
-
-    public void ChangeName(string newName)
-    {
-        ValidateGameName(newName);
-
-        GameName = newName.Trim();
-    }
-
-    public void UpdateDescription(string description)
-    {
-       var trimmed = description?.Trim() ?? string.Empty;
-
-        if (trimmed.Length > 500)
-            throw new ArgumentException(
-                "Spelbeskrivningen får inte vara längre än 500 tecken");
-        GameDescription = trimmed;
-    }
+   //     if (trimmed.Length > 500)
+   //         throw new ArgumentException(
+   //             "Spelbeskrivningen får inte vara längre än 500 tecken");
+   //     GameDescription = trimmed;
+   // }
     public void UpdateGame(
         string gameName,
         int minPlayers,
@@ -114,12 +96,12 @@ public class Game
         DifficultyLevelEnum difficulty,
         GamegenreEnum genre)
     {
-        ValidateGameName(gameName);
         ValidatePlayerCounts(minPlayers, maxPlayers);
+
         if (averageGameLength <= 0)
             throw new ArgumentOutOfRangeException(nameof(averageGameLength), "Speltid måste anges");
 
-        GameName = gameName;
+        GameName = ValidateGameName(gameName);
         MinimumNumberOfPlayer = minPlayers;
         MaximumNumberOfPlayer = maxPlayers;
         AverageGameLength = averageGameLength; 
@@ -127,20 +109,10 @@ public class Game
         Gamegenre = genre;
         
     }
-
-    public void SetDifficulty(DifficultyLevelEnum difficulty)
-    {
-        DifficultyLevel = difficulty;
-    }
-
-    public void SetGenre(GamegenreEnum genre)
-    {
-        Gamegenre = genre;
-    }
-
+  
     public void MarkAsReserved()
     {
-        if (GameAvailability == GameAvailabilityEnum.Unavailable)
+        if (GameAvailability != GameAvailabilityEnum.Available)
             throw new InvalidOperationException(
                 "Spelet är otillgängligt och kan inte reserveras");
 
@@ -149,19 +121,27 @@ public class Game
 
     public void MarkAsAvailable()
     {
-        GameAvailability = GameAvailabilityEnum.Available;
-    }
+       if (GameAvailability == GameAvailabilityEnum.Reserved)
+        throw new InvalidOperationException(
+            "Spelet är reserverat för en träff och måste avbokas först");
 
-    public void MarkAsUnavailable()
-    {
         GameAvailability = GameAvailabilityEnum.Unavailable;
     }
 
-    public bool IsSuitableForPlayerCount(int numberOfPlayers)
-    {
-        return numberOfPlayers >= MinimumNumberOfPlayer
-            && numberOfPlayers <= MaximumNumberOfPlayer;
-    }
+    //public void MarkAsUnavailable() // Känns som en redundant funktion.. överväg ta bort
+    //{
+    //    if (GameAvailability == GameAvailabilityEnum.Reserved)
+    //        throw new InvalidOperationException(
+    //            "Spelet är reserverat för en träff och måste avbokas först");
+
+    //    GameAvailability = GameAvailabilityEnum.Unavailable;
+    //}
+
+    //public bool IsSuitableForPlayerCount(int numberOfPlayers) // Ej implementerad
+    //{
+    //    return numberOfPlayers >= MinimumNumberOfPlayer
+    //        && numberOfPlayers <= MaximumNumberOfPlayer;
+    //}
 
     public bool IsAvailableForBooking()
     {

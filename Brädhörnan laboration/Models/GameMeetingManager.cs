@@ -17,7 +17,8 @@ public class GameMeetingManager
     public GameMeeting CreateGameMeeting(
         DateTime dateAndTime,
         string location,
-        int maxParticipants, EventTypeEnum eventType)
+        int maxParticipants,
+        EventTypeEnum eventType)
     { 
         var meeting = new GameMeeting(
             _nextMeetingId++,
@@ -34,9 +35,7 @@ public class GameMeetingManager
     {
         return _meetings.ToList();
     }
-    public (bool success, string message) RegisterParticipant(
-        int meetingId,
-        Member member)
+    public (bool success, string message) RegisterParticipant(int meetingId,Member member)
     {
         var meeting = GetMeetingById(meetingId);
 
@@ -54,9 +53,7 @@ public class GameMeetingManager
             return (false, $"Registrering misslyckades: {ex.Message}");
         }
     }
-    public (bool success, string message) UnregisterParticipant(
-        int meetingId,
-        Member member)
+    public (bool success, string message) UnregisterParticipant(int meetingId,Member member)
     {
         var meeting = GetMeetingById(meetingId);
         if (meeting == null)
@@ -97,11 +94,10 @@ public class GameMeetingManager
             return (false, ex.Message);
         }
     }
-    public (bool success, string message) RemoveGameFromMeeting(
-    int meetingId,
-    Game game)
+    public (bool success, string message) RemoveGameFromMeeting(int meetingId, Game game)
     {
         var meeting = GetMeetingById(meetingId);
+
         if (meeting == null)
             return (false, "Spelträff hittades inte");
 
@@ -111,9 +107,9 @@ public class GameMeetingManager
         
             return (true, "Spelet frigjordes");
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
-            return (false, "Misslyckad frigörning");
+            return (false, ex.Message);
         }
     }
     public IEnumerable<GameMeeting> GetUpcomingMeetings()
@@ -132,21 +128,22 @@ public class GameMeetingManager
     {
         return _meetings.GroupBy(m => m.EventType);
     }
-    public bool RemoveMeeting(int meetingId)
+    public(bool success, string message) RemoveMeeting(int meetingId)
     {
         var meeting = GetMeetingById(meetingId);
 
-        if(meeting == null)
-            return false;
+        if (meeting == null)
+            return (false, "Spelträff hittades inte");
 
         if (meeting.Participants.Any())
-            return false;
+            return (false, "Spelträffen har deltagare och kan inte tas bort");
+
         var gamesToRemove = meeting.PlannedGames.ToList();
         foreach (var game in gamesToRemove)
         {
             meeting.RemovePlannedGame(game);
         }
-        return _meetings.Remove(meeting);
+        return (_meetings.Remove(meeting), "Spelträff har tagits bort.");
 
 
     }

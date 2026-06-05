@@ -78,11 +78,56 @@ public static class DemoData
 
         return gameManager;
     }
-    
+    public static GameMeetingManager GameMeetingDemoData(MemberManager memberManager, GameManager gameMananger)
+    {
+        var meetingManager = new GameMeetingManager();
+
+        var members = memberManager.GetAllMembers().ToList();
+        var games = gameMananger.GetAllGames().ToList();
+
+     ;
+        var anna = members[0];
+        var erik = members[1];
+        var maria = members[2];
+        var johan = members[3];
+
+        var blackjack = games[0];
+        var monopol = games[1];
+        var schack = games[3];
+
+        var spelkvall = meetingManager.CreateGameMeeting(
+         
+            DateTime.Now.AddDays(7),
+            "Föreningslokalen",
+            6,
+            EventTypeEnum.Opening_evening);
+
+        spelkvall.AddParticipant(anna);
+        spelkvall.AddParticipant(erik);
+        spelkvall.AddParticipant(maria);
+        spelkvall.AddPlannedGame(blackjack);
+
+        var turneringen = meetingManager.CreateGameMeeting(
+      
+            DateTime.Now.AddDays(14),
+            "Stora salen",
+            4,
+            EventTypeEnum.Tournament);
+
+        turneringen.AddParticipant(erik);
+        turneringen.AddParticipant(johan);
+        turneringen.AddPlannedGame(schack);
+
+        return meetingManager;
+    }
+
+
+
+}
+
         
 
         
 
       
 
-}

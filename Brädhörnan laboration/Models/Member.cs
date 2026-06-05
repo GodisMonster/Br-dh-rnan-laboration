@@ -15,7 +15,7 @@ public class Member
     private const int EmailMaxLength = 254;
     private const int PhoneMaxLength = 20;
 
-    public int MemberNumber { get; private set; }
+    public int MemberNumber { get; }
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string Email { get; private set; }
@@ -25,7 +25,6 @@ public class Member
     public MemberStatusEnum Status { get; private set; }
 
     public string FullName => $"{FirstName} {LastName}";
-
     public Member(
         int memberNumber,
         string firstName,
@@ -109,24 +108,19 @@ public class Member
                 $"Telefonnummer får max vara {PhoneMaxLength} tecken.");
         return phone;
     }
-    public override string ToString()
-    {
-        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn:  {FirstName} - Efternamn: {LastName} Status: ({Status}) - Roll: {Role}";
-    }
+  
     public void UpdateName(string firstName, string lastName)
     {
         FirstName = ValidateName(firstName, nameof(firstName));
         LastName = ValidateName(lastName, nameof(lastName));
     }
     public void UpdateEmail(string email)
-    {
-        {
-            Email = ValidateEmail(email);
-        }
+    { 
+        Email = ValidateEmail(email);       
     }
     public void UpdatePhone(string phone)
     {
-        Phone=ValidatePhone(phone);
+        Phone = ValidatePhone(phone);
     }
     public void UpdateRole(MemberRoleEnum role)
     {
@@ -134,6 +128,10 @@ public class Member
     }
     public void UpdateStatus(MemberStatusEnum status)
     {
-        Status =status;
+        Status = status;
+    }
+    public override string ToString()
+    {
+        return $"ID: {MemberNumber} Medlem sedan: {RegistrationDate} - Förnamn: {FirstName} - Efternamn: {LastName} Status: ({Status}) - Roll: {Role}";
     }
 }
