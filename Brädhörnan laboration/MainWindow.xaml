@@ -7,18 +7,17 @@
         Title="Laboration 1 - Objektorienterad programmering i C#" Height="600" Width="900">
 
     <Grid Margin="10">
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        
         <!-- Titel -->
         <TextBlock Text="Spelförening: Brädhörnan"
                    FontSize="20"
                    FontWeight="Bold"
                    Margin="0,0,0,0"/>
-
+        
         <!-- Tabs -->
         <TabControl Grid.Row="1">
 
@@ -229,13 +228,13 @@
                         <Label Content="Ansvarig:" />
                         <ComboBox x:Name="ResponsibleComboBox" 
                                 DisplayMemberPath="FullName"
-                                  Margin="0,0,0,5"/> 
+                                  Margin="0,0,0,5"/>
 
                         <TextBlock Text="Eventtyp"/>
                         <ComboBox x:Name="EventTypeComboBox"
                                  Margin="0,0,0,5"
                                   />
-                        
+
                         <TextBlock Text="Datum"/>
                         <DatePicker x:Name="MeetingDatePicker"
                                  Margin="0,0,0,5"/>
@@ -248,17 +247,17 @@
                         <Label Content="Välj medlem att lägga till:"/>
                         <ComboBox x:Name="AvailableMembersComboBox" 
                                   Margin="0,0,0,5"/>
-                        
+
                         <Label Content="Tillgängliga spel:"/>
                         <ComboBox x:Name="AvailableGamesComboBox"
-                                  Margin="0,0,0,5"/> 
+                                  Margin="0,0,0,5"/>
 
 
                         <Button Content="Skapa träff"
                                 Height="25"
                                 Margin="0,0,0,5"
                                 Click="CreateMeetingButton_Click"/>
-                        
+
                         <Label Content="Deltagare i vald spelträff:"/>
                         <ListBox x:Name="MeetingParticipantsListBox" Margin="0,0,0,5" Height="75"/>
 
@@ -289,9 +288,7 @@
                                 Click="UnregisterGame_Click"/>
 
                     </StackPanel>
-
                 </Grid>
-
             </TabItem>
 
         </TabControl>

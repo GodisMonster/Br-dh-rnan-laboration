@@ -2,9 +2,6 @@
 using Brädhörnan_laboration.Enum;
 using Brädhörnan_laboration.Models;
 using Brädhörnan_laboration.Services;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -19,12 +16,12 @@ namespace Brädhörnan_laboration
         private Member? _selectedMember = null;
         private Game? _selectedGame = null;
         private GameMeeting? _selectedMeeting = null;
-        
+
 
         public MainWindow()
         {
             InitializeComponent();
-            
+
             _memberManager = DemoData.MembersDemoData();
             RefreshMemberList();
 
@@ -41,11 +38,11 @@ namespace Brädhörnan_laboration
             EventTypeComboBox.ItemsSource = System.Enum.GetValues(typeof(EventTypeEnum));
             GenreComboBox.ItemsSource= System.Enum.GetValues(typeof(GamegenreEnum));
             RefreshAvailableGames();
-            
+
             StatusComboBox.SelectedItem = MemberStatusEnum.Active;
             RollComboBox.SelectedItem = MemberRoleEnum.Member;
             DifficultyComboBox.SelectedItem = DifficultyLevelEnum.Easy;
-            GenreComboBox.SelectedItem = GamegenreEnum.Unknown; 
+            GenreComboBox.SelectedItem = GamegenreEnum.Unknown;
 
             RefreshAvailableMembers();
         }
@@ -100,12 +97,12 @@ namespace Brädhörnan_laboration
                     MessageBox.Show("Minsta antal spelare måste vara ett nummer.");
                     return;
                 }
-                if(!int.TryParse(MaxPlayersTextBox.Text, out int maxPlayers))
+                if (!int.TryParse(MaxPlayersTextBox.Text, out int maxPlayers))
                 {
                     MessageBox.Show("Max antal spelare måste vara ett nummer.");
                     return;
                 }
-                if(!int.TryParse(GameLengthTextBox.Text,out int gameLength))
+                if (!int.TryParse(GameLengthTextBox.Text, out int gameLength))
                 {
                     MessageBox.Show("Speltid måste vara angivet.");
                     return;
@@ -213,7 +210,7 @@ namespace Brädhörnan_laboration
 
                 RefreshMemberList();
                 ClearMemberInputs();
-                ResetMemberForm();
+                ClearMemberForm();
 
                 MessageBox.Show("Medlem uppdaterad.");
             }
@@ -237,7 +234,7 @@ namespace Brädhörnan_laboration
 
                         RefreshMemberList();
                         ClearMemberInputs();
-                        ResetMemberForm();
+                        ClearMemberForm();
                         MessageBox.Show("Medlem bortagen");
                     }
 
@@ -267,9 +264,10 @@ namespace Brädhörnan_laboration
                     MessageBox.Show("Välj eventtyp.");
                     return;
                 }
-                if(!int.TryParse(MaxParticipantsTextBox.Text,out int maxParticipants))
+                if (!int.TryParse(MaxParticipantsTextBox.Text, out int maxParticipants))
                 {
                     MessageBox.Show("Maxantal för spelträff måste anges.");
+                    return;
                 }
 
                 DateTime dateAndTime = MeetingDatePicker.SelectedDate.Value.Date + time;
@@ -281,7 +279,7 @@ namespace Brädhörnan_laboration
                     maxParticipants,
                     eventType);
 
-                if(ResponsibleComboBox.SelectedItem is Member selectedResponsible)
+                if (ResponsibleComboBox.SelectedItem is Member selectedResponsible)
                 {
                     meeting.SetResponsible(selectedResponsible);
                 }
@@ -362,21 +360,21 @@ namespace Brädhörnan_laboration
                 MessageBox.Show($"Ett oväntat fel inträffade: {ex.Message}");
             }
         }
-        
+
         private void BookGame_Click(object sender, RoutedEventArgs e)
         {
 
-         if (_selectedMeeting == null)
+            if (_selectedMeeting == null)
             {
                 MessageBox.Show("Välj en spelträff.");
                 return;
             }
-         if(AvailableGamesComboBox.SelectedItem is not Game selectedGame)
+            if (AvailableGamesComboBox.SelectedItem is not Game selectedGame)
             {
                 MessageBox.Show("Välj ett spel att boka.");
                 return;
             }
-         try
+            try
             {
                 var (success, message) = _meetingManager.AddGameToMeeting(
            _selectedMeeting.GameMeetingId,
@@ -385,7 +383,7 @@ namespace Brädhörnan_laboration
                 if (success)
                 {
                     RefreshPlannedGamesList();
-                    RefreshAvailableGames(); 
+                    RefreshAvailableGames();
                     MessageBox.Show($"Bokningen lyckades: {message}");
                 }
                 else
@@ -398,9 +396,6 @@ namespace Brädhörnan_laboration
                 MessageBox.Show($"Fel vid bokning: {ex.Message}");
             }
         }
-            
-
-        
         private void UnregisterGame_Click(object sender, RoutedEventArgs e)
         {
             if (_selectedMeeting == null)
@@ -423,8 +418,8 @@ namespace Brädhörnan_laboration
 
                 if (success)
                 {
-                    RefreshAvailableGames();      
-                    RefreshPlannedGamesList();   
+                    RefreshAvailableGames();
+                    RefreshPlannedGamesList();
                     MessageBox.Show($"Avbokning lyckades: {message}");
                 }
                 else
@@ -437,7 +432,7 @@ namespace Brädhörnan_laboration
                 MessageBox.Show($"Fel vid avbokning: {ex.Message}");
             }
         }
-
+        // LISTBOXAR
         private void GamesListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (GamesListBox.SelectedItem is Game selectedGame)
@@ -448,7 +443,7 @@ namespace Brädhörnan_laboration
                 MinPlayersTextBox.Text = selectedGame.MinimumNumberOfPlayer.ToString();
                 MaxPlayersTextBox.Text = selectedGame.MaximumNumberOfPlayer.ToString();
                 GameLengthTextBox.Text = selectedGame.AverageGameLength.ToString();
-                DifficultyComboBox.SelectedItem = selectedGame.Gamegenre.ToString();
+                DifficultyComboBox.SelectedItem = selectedGame.DifficultyLevel;
                 GenreComboBox.SelectedItem = selectedGame.Gamegenre;
 
                 AddGameButton.Visibility = Visibility.Visible;
@@ -484,7 +479,18 @@ namespace Brädhörnan_laboration
                 RefreshAvailableMembers();
             }
         }
-        // Hjälpfunktioner för snyggare UI
+        private void FilterStatusMemberButton_Click(object sender, RoutedEventArgs e)
+        {
+            MembersListBox.Items.Clear();
+
+            var activeMembers = _memberManager.GetActiveMembers();
+            foreach (var member in activeMembers)
+            {
+                MembersListBox.Items.Add(member);
+            }
+        }
+          
+        // CLEAR & REFRESH METHODS
         private void ClearMemberInputs()
         {
             FirstNameTextBox.Clear();
@@ -510,15 +516,20 @@ namespace Brädhörnan_laboration
             ResponsibleComboBox.SelectedItem = null;
             EventTypeComboBox.SelectedItem = null;
             MeetingDatePicker.SelectedDate = null;
-            MeetingTimeTextBox.Clear();        
+            MeetingTimeTextBox.Clear();
+        }
+        private void ClearMemberForm()
+        {
+            _selectedMember = null;
+            AddMemberButton.Visibility = Visibility.Visible;
+            UpdateMemberButton.Visibility = Visibility.Collapsed;
+            MembersListBox.SelectedItem = null;
         }
         private void RefreshMemberList()
         {
             MembersListBox.Items.Clear();
-            foreach (var member in _memberManager.GetAllMembers()) // Metod som hämtas från klass
-            {
-                MembersListBox.Items.Add(member);
-            }
+            foreach (var member in _memberManager.GetAllMembers())           
+                MembersListBox.Items.Add(member);           
         }
         private void RefreshAvailableMembers()
         {
@@ -541,7 +552,7 @@ namespace Brädhörnan_laboration
                 .Any(p => p.MemberNumber == member.MemberNumber));
 
             foreach (var member in availableMembers)
-                AvailableGamesComboBox.Items.Add(member);
+                AvailableMembersComboBox.Items.Add(member);
 
             foreach (var member in allMembers)
                 ResponsibleComboBox.Items.Add(member);
@@ -549,20 +560,15 @@ namespace Brädhörnan_laboration
         private void RefreshGameList()
         {
             GamesListBox.Items.Clear();
-
             foreach (var game in _gameManager.GetAllGames())
-            {
+           
                 GamesListBox.Items.Add(game);
-            }
         }
         private void RefreshAvailableGames()
         {
-
             AvailableGamesComboBox.Items.Clear();
 
             var allGames = _gameManager.GetAllGames();
-            if (allGames == null) return;
-
 
             if (_selectedMeeting == null)
             {
@@ -572,100 +578,60 @@ namespace Brädhörnan_laboration
                 }
                 return;
             }
-
-
-            if (_selectedMeeting.PlannedGames == null)
-            {
-                foreach (var game in allGames)
-                {
-                    AvailableGamesComboBox.Items.Add(game);
-                }
-                return;
-            }
-
-
-            var availableGames = allGames.Where(game =>
-                !_selectedMeeting.PlannedGames.Any(pg => pg.GameId == game.GameId));
-
+            var availableGames = allGames
+                .Where(game => !_selectedMeeting.PlannedGames.Any(pg => pg.GameId == game.GameId));
+           
             foreach (var game in availableGames)
-            {
                 AvailableGamesComboBox.Items.Add(game);
-            }
-        }
-        private void ResetMemberForm()
-        {
-            _selectedMember = null;
-            AddMemberButton.Visibility = Visibility.Visible;
-            UpdateMemberButton.Visibility = Visibility.Collapsed;
-            MembersListBox.SelectedItem = null;
         }
 
         private void RefreshMeetingList()
         {
             MeetingsListBox.Items.Clear();
-
-            foreach (var meeting in _meetingManager.GetAllMeetings())
-            {
-                MeetingsListBox.Items.Add(meeting);
-            }
+            foreach (var meeting in _meetingManager.GetAllMeetings())           
+                MeetingsListBox.Items.Add(meeting);          
         }
         private void RefreshMeetingParticipantsList()
         {
             MeetingParticipantsListBox.Items.Clear();
-
             if (_selectedMeeting == null)
-                return;
+                return; 
 
-            foreach (var participant in _selectedMeeting.Participants)
-            {
-                MeetingParticipantsListBox.Items.Add(participant);
-            }
+            foreach (var participant in _selectedMeeting.Participants)            
+                MeetingParticipantsListBox.Items.Add(participant);            
         }
         private void RefreshPlannedGamesList()
         {
             PlannedGamesListBox.Items.Clear();
-
             if (_selectedMeeting == null)
                 return;
 
-            foreach (var game in _selectedMeeting.PlannedGames)
-            {
-                PlannedGamesListBox.Items.Add(game);
-            }
+            foreach (var game in _selectedMeeting.PlannedGames)           
+                PlannedGamesListBox.Items.Add(game);          
         }
-        // LINQ-FUNKTIONER
+        // LINQ-FUNCTIONS AS BUTTON
         private void GroupByGenre_Click(object sender, RoutedEventArgs e)
         {
             GamesListBox.Items.Clear();
 
             var groupedGames = _gameManager.GetAllGames().GroupBy(g => g.Gamegenre);
 
-            foreach(var group in groupedGames)
+            foreach (var group in groupedGames)
             {
                 GamesListBox.Items.Add($"Genre: {group.Key}");
 
-                foreach(var game in group)
+                foreach (var game in group)
                 {
                     GamesListBox.Items.Add(game);
                 }
-            }
-        }
-        private void FilterStatusMemberButton_Click(object sender, RoutedEventArgs e) 
-        {
-            MembersListBox.Items.Clear();
-
-            var activeMembers = _memberManager.GetActiveMembers();
-            foreach( var member in activeMembers)
-            {
-                MembersListBox.Items.Add(member);
             }
         }
         private void SortMemberByName_Click(object sender, RoutedEventArgs e)
         {
             MembersListBox.Items.Clear();
 
-            var sorteringMedlem = _memberManager.GetMembersSortedByName();
-            foreach(var member in sorteringMedlem)
+            var sortedMember = _memberManager.GetMembersSortedByName();
+            foreach (var member in sortedMember)
             {
                 MembersListBox.Items.Add(member);
             }
