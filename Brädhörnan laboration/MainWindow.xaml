@@ -3,291 +3,250 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:enum="clr-namespace:Brädhörnan_laboration.Enum"
         mc:Ignorable="d"
-        Title="Laboration 1 - Objektorienterad programmering i C#" Height="600" Width="900">
+        Title="Avancerad objektorienterad uppgift - Objektorienterad programmering i C#" Height="600" Width="900">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <!-- Titel -->
+
         <TextBlock Text="Spelförening: Brädhörnan"
                    FontSize="20"
                    FontWeight="Bold"
                    Margin="0,0,0,0"/>
-        
-        <!-- Tabs -->
+
         <TabControl Grid.Row="1">
-
-            <!-- SPEL -->
             <TabItem Header="Spelbibliotek">
-
                 <Grid Margin="10">
-
                     <Grid.ColumnDefinitions>
-
-                        <ColumnDefinition Width="19*"/>
-                        <ColumnDefinition Width="88*"/>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="90*"/>
                         <ColumnDefinition Width="Auto"/>
-
-
                     </Grid.ColumnDefinitions>
-
-                    <!-- Lista med spel -->
-                    <ListBox x:Name="GamesListBox"
-                 Grid.Column="0"
+                    <ListBox Grid.Column="0"
+                 Grid.ColumnSpan="2"
                  Margin="0,0,10,0"
-                 SelectionChanged = "GamesListBox_SelectionChanged" 
-                             Grid.ColumnSpan="2"/>
-
-                    <!-- DETALJER -->
-
-                    <!-- Formulär -->
-                    <StackPanel Grid.Column="2">
-
-                        <TextBlock Text="Lägg till spel"
-                                   FontSize="20"
-                                   FontWeight="Bold"
-                                   Margin="200,0,0,0"/>
-
-                        <TextBlock Text="Spelnamn"/>
-                        <TextBox x:Name="GameNameTextBox"
-                                 Margin="0,0,0,10"/>
-
-                        <TextBlock Text="Min spelare"/>
-                        <TextBox x:Name="MinPlayersTextBox"
-                                 Margin="0,0,0,10"/>
-
-                        <TextBlock Text="Max spelare"/>
-                        <TextBox x:Name="MaxPlayersTextBox"
-                                 Margin="0,0,0,10"/>
-                        
-                        <TextBlock Text="Spelsvårighet"/>
-                        <ComboBox x:Name="DifficultyComboBox"
-                                  Margin="0,0,0,10"
-                                  Height="20"/>
-
-                        <TextBlock Text="Genre"/>
-                        <ComboBox x:Name="GenreComboBox"
-                                  Margin="0,0,0,10"
-                                  Height="20"/>
-
-                        <TextBlock Text="Speltid (min)"/>
-                        <TextBox x:Name="GameLengthTextBox"
-                                 Margin="0,0,0,20"/>
-
-                        <Button x:Name="AddGameButton"
-                                Content="Lägg till spel"
-                                Height="35"
-                                Click="AddGameButton_Click"/>
-
-                        <Button x:Name="UpdateGameButton"
-                                Content="Uppdatera spel"
-                                Height="35"
-                                Margin="0,10,0,0"
-                                Click="UpdateGameButton_Click"/>
-
-                        <Button x:Name="RemoveGameButton"
-                                Content="Ta bort spel"
-                                Height="35"
-                                Margin="0,10,0,0"
-                                Click="RemoveGameButton_Click"/>
-                        
-                        <Button x:Name="GroupByGenre"
-                                Content="Gruppera genom genre"
-                                Height="35"
-                                Margin="0,10,0,0"
-                                Click="GroupByGenre_Click"/>
-
-                    </StackPanel>
-
+                 ItemsSource="{Binding GameVM.Games}"
+                 SelectedItem="{Binding GameVM.SelectedGame}"/>
+                    <ScrollViewer Grid.Column="2"
+                      VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="Lägg till spel"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Margin="200,0,0,0"/>
+                            <TextBlock Text="Spelnamn"/>
+                            <TextBox Text="{Binding GameVM.GameName, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,10"/>
+                            <TextBlock Text="Min spelare"/>
+                            <TextBox Text="{Binding GameVM.MinPlayers, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,10"/>
+                            <TextBlock Text="Max spelare"/>
+                            <TextBox Text="{Binding GameVM.MaxPlayers, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,10"/>
+                            <TextBlock Text="Spelsvårighet"/>
+                            <ComboBox ItemsSource="{Binding GameVM.DifficultyLevels}"
+                          SelectedItem="{Binding GameVM.SelectedDifficulty}"
+                          Margin="0,0,0,10"
+                          Height="20"/>
+                            <TextBlock Text="Genre"/>
+                            <ComboBox ItemsSource="{Binding GameVM.Genres}"
+                          SelectedItem="{Binding GameVM.SelectedGenre}"
+                          Margin="0,0,0,10"
+                          Height="20"/>
+                            <TextBlock Text="Speltid (min)"/>
+                            <TextBox Text="{Binding GameVM.GameLength, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,20"/>
+                            <Button Content="Lägg till spel"
+                        Height="35"
+                        Command="{Binding GameVM.AddGameCommand}"/>
+                            <Button Content="Uppdatera spel"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding GameVM.UpdateGameCommand}"/>
+                            <Button Content="Ta bort spel"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding GameVM.RemoveGameCommand}"/>
+                            <Button Content="Gruppera genom genre"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding GameVM.GroupByGenreCommand}"/>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Grid>
-
             </TabItem>
 
             <!-- MEDLEMMAR -->
             <TabItem Header="Medlemmar">
-
                 <Grid Margin="10">
-
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3.5*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-
-                    <!-- Medlemslista -->
-                    <ListBox x:Name="MembersListBox"
-                             Grid.Column="0"
-                             Margin="0,0,10,0"
-                             SelectionChanged="MemberListBox_SelectionChanged"/>
-
-                    <!-- Form -->
-                    <StackPanel Grid.Column="1">
-
-                        <TextBlock Text="Ny medlem"
-                                   FontSize="20"
-                                   FontWeight="Bold"
-                                   Margin="200,0,0,10"/>
-
-                        <TextBlock Text="Förnamn"/>
-                        <TextBox x:Name="FirstNameTextBox"
-                                 Margin="0,0,0,10"/>
-
-                        <TextBlock Text="Efternamn"/>
-                        <TextBox x:Name="LastNameTextBox"
-                                 Margin="0,0,0,10"/>
-
-                        <TextBlock Text="Email"/>
-                        <TextBox x:Name="EmailTextBox"
-                                 Margin="0,0,0,10"/>
-
-                        <TextBlock Text="Telefon"/>
-                        <TextBox x:Name="PhoneTextBox"
-                                 Margin="0,0,0,10"/>
-
-                        <TextBlock Text="Roll"/>
-                        <ComboBox x:Name="RollComboBox"
-                                    Margin="0,0,0,10"
-                                  Height="20"/>
-
-                        <TextBlock Text="Status"/>
-                        <ComboBox x:Name="StatusComboBox"
-                                  Margin="0,0,0,20"
-                                  Height="20"/>
-
-                        <Button x:Name="AddMemberButton"
-                                Content="Registrera medlem"
-                                Height="35"
-                                Margin="0,10,0,0"
-                                Click="AddMemberButton_Click"/>
-
-                        <Button x:Name="UpdateMemberButton"
-                                Content="Uppdatera medlem"
-                                Height="35"
-                                Margin="0,10,0,0"
-                                Click="UpdateMemberButton_Click"/>
-
-                        <Button x:Name="RemoveMemberbutton"
-                                        Content="Ta bort medlem"
-                                        Height="35"
-                                        Margin="0,10,0,0"
-                                        Click="RemoveMemberButton_Click"/>
-
-                        <Button x:Name="SortMemberByName"
-                                Content="Sortera medlemmar A-Ö"
-                                Height="35"
-                                Margin="0,10,0,0"
-                                Click="SortMemberByName_Click"/>
-
-                        <Button x:Name="FilterStatusMember"
-                                  Content="Aktiva medlemmar"
-                                  Height="35"
-                                  Margin="0,10,0,0"
-                                Click="FilterStatusMemberButton_Click"/>
-
-                    </StackPanel>
-
+                    <ListBox Grid.Column="0"
+                 Margin="0,0,10,0"
+                 ItemsSource="{Binding MemberVM.Members}"
+                 SelectedItem="{Binding MemberVM.SelectedMember}"/>
+                    <ScrollViewer Grid.Column="1"
+                      VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="Ny medlem"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Margin="200,0,0,10"/>
+                            <TextBlock Text="Förnamn"/>
+                            <TextBox Text="{Binding MemberVM.FirstName, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,10"/>
+                            <TextBlock Text="Efternamn"/>
+                            <TextBox Text="{Binding MemberVM.LastName, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,10"/>
+                            <TextBlock Text="Email"/>
+                            <TextBox Text="{Binding MemberVM.Email, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,10"/>
+                            <TextBlock Text="Telefon"/>
+                            <TextBox Text="{Binding MemberVM.Phone, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,10"/>
+                            <TextBlock Text="Roll"/>
+                            <ComboBox ItemsSource="{Binding MemberVM.Roles}"
+                          SelectedItem="{Binding MemberVM.SelectedRole}"
+                          Margin="0,0,0,10"
+                          Height="20"/>
+                            <TextBlock Text="Status"/>
+                            <ComboBox ItemsSource="{Binding MemberVM.Statuses}"
+                          SelectedItem="{Binding MemberVM.SelectedStatus}"
+                          Margin="0,0,0,20"
+                          Height="20"/>
+                            <Button Content="Registrera medlem"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding MemberVM.AddMemberCommand}"/>
+                            <Button Content="Uppdatera medlem"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding MemberVM.UpdateMemberCommand}"/>
+                            <Button Content="Ta bort medlem"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding MemberVM.RemoveMemberCommand}"/>
+                            <Button Content="Sortera medlemmar A-Ö"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding MemberVM.SortByNameCommand}"/>
+                            <Button Content="Aktiva medlemmar"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding MemberVM.FilterActiveCommand}"/>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Grid>
-
             </TabItem>
 
             <!-- SPELTRÄFFAR -->
             <TabItem Header="Spelträffar">
-
                 <Grid Margin="10">
-
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Lista -->
-                    <ListBox x:Name="MeetingsListBox"
-                             Grid.Column="0"
-                             Margin="0,0,10,0"
-                             SelectionChanged="MeetingsListBox_SelectionChanged"/>
+                    <ListBox Grid.Column="0"
+                 Margin="0,0,10,0"
+                 ItemsSource="{Binding GameMeetingVM.Meetings}"
+                 SelectedItem="{Binding GameMeetingVM.SelectedMeeting}"/>
 
-                    <!-- Form -->
-                    <StackPanel Grid.Column="1">
+                    <ScrollViewer Grid.Column="1"
+                      VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="Skapa spelträff"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Margin="0,0,0,0"/>
 
-                        <TextBlock Text="Skapa spelträff"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   Margin="0,0,0,0"/>
+                            <Button Content="Avmarkera träff"
+                        Height="25"
+                        Width="100"
+                        Margin="350,0,0,0"
+                        Command="{Binding GameMeetingVM.ClearSelectedMeetingCommand}"/>
 
-                        <TextBlock Text="Plats"/>
-                        <TextBox x:Name="LocationTextBox"
-                                 Margin="0,0,0,5"/>
+                            <TextBlock Text="Plats"/>
+                            <TextBox Text="{Binding GameMeetingVM.Location, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,5"/>
 
-                        <TextBlock Text="Max deltagare"/>
-                        <TextBox x:Name="MaxParticipantsTextBox"
-                                 Margin="0,0,0,5"/>
+                            <TextBlock Text="Max deltagare"/>
+                            <TextBox Text="{Binding GameMeetingVM.MaxParticipants, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,5"/>
 
-                        <Label Content="Ansvarig:" />
-                        <ComboBox x:Name="ResponsibleComboBox" 
-                                DisplayMemberPath="FullName"
-                                  Margin="0,0,0,5"/>
+                            <Label Content="Ansvarig:"/>
+                            <ComboBox ItemsSource="{Binding GameMeetingVM.AvailableMembers}"
+                          SelectedItem="{Binding GameMeetingVM.Responsible}"
+                          DisplayMemberPath="FullName"
+                          Margin="0,0,0,5"/>
 
-                        <TextBlock Text="Eventtyp"/>
-                        <ComboBox x:Name="EventTypeComboBox"
-                                 Margin="0,0,0,5"
-                                  />
+                            <TextBlock Text="Eventtyp"/>
+                            <ComboBox ItemsSource="{Binding GameMeetingVM.EventTypes}"
+                          SelectedItem="{Binding GameMeetingVM.SelectedEventType}"
+                          Margin="0,0,0,5"/>
 
-                        <TextBlock Text="Datum"/>
-                        <DatePicker x:Name="MeetingDatePicker"
-                                 Margin="0,0,0,5"/>
+                            <TextBlock Text="Datum"/>
+                            <DatePicker SelectedDate="{Binding GameMeetingVM.MeetingDate}"
+                            Margin="0,0,0,5"/>
 
+                            <TextBlock Text="Tid (HH:mm)"/>
+                            <TextBox Text="{Binding GameMeetingVM.MeetingTime, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,5"/>
 
-                        <TextBlock Text="Tid (HH:mm)"/>
-                        <TextBox x:Name="MeetingTimeTextBox"
-                                      Margin="0,0,0,5"/>
+                            <Label Content="Välj medlem att lägga till:"/>
+                            <ComboBox ItemsSource="{Binding GameMeetingVM.AvailableMembers}"
+                          SelectedItem="{Binding GameMeetingVM.SelectedParticipant}"
+                          DisplayMemberPath="FullName"
+                          Margin="0,0,0,5"/>
 
-                        <Label Content="Välj medlem att lägga till:"/>
-                        <ComboBox x:Name="AvailableMembersComboBox" 
-                                  Margin="0,0,0,5"/>
+                            <Label Content="Tillgängliga spel:"/>
+                            <ComboBox ItemsSource="{Binding GameMeetingVM.AvailableGames}"
+                          SelectedItem="{Binding GameMeetingVM.SelectedGame}"
+                          Margin="0,0,0,5"/>
 
-                        <Label Content="Tillgängliga spel:"/>
-                        <ComboBox x:Name="AvailableGamesComboBox"
-                                  Margin="0,0,0,5"/>
+                            <Button Content="Skapa träff"
+                        Height="25"
+                        Margin="0,0,0,5"
+                        Command="{Binding GameMeetingVM.CreateMeetingCommand}"/>
 
+                            <Label Content="Deltagare i vald spelträff:"/>
+                            <ListBox ItemsSource="{Binding GameMeetingVM.Participants}"
+                         Margin="0,0,0,5"
+                         Height="75"/>
 
-                        <Button Content="Skapa träff"
-                                Height="25"
-                                Margin="0,0,0,5"
-                                Click="CreateMeetingButton_Click"/>
+                            <Label Content="Bokade spel:"/>
+                            <ListBox ItemsSource="{Binding GameMeetingVM.PlannedGames}"
+                         Margin="0,0,0,30"
+                         Height="75"/>
 
-                        <Label Content="Deltagare i vald spelträff:"/>
-                        <ListBox x:Name="MeetingParticipantsListBox" Margin="0,0,0,5" Height="75"/>
+                            <Button Content="Lägg till deltagare i träff"
+                        Height="25"
+                        Margin="0,0,0,10"
+                        Command="{Binding GameMeetingVM.AddParticipantCommand}"/>
 
-                        <Label Content="Bokade spel:"/>
-                        <ListBox x:Name="PlannedGamesListBox" Margin="0,0,0,30" Height="75"/>
+                            <Button Content="Ta bort deltagare från träff"
+                        Height="25"
+                        Margin="0,0,0,10"
+                        Command="{Binding GameMeetingVM.RemoveParticipantCommand}"/>
 
+                            <Button Content="Boka spel"
+                        Height="25"
+                        Margin="0,0,0,10"
+                        Command="{Binding GameMeetingVM.BookGameCommand}"/>
 
-
-                        <Button x:Name="AddParticipantButton" 
-                        Content="Lägg till deltagare i träff" 
-                                Height="25"
-                                Margin="0,0,0,10"
-                        Click="AddParticipantButton_Click"/>
-
-                        <Button Content="Ta bort deltagare från träff"
-                               Height="25"
-                                Margin="0,0,0,10"
-                               Click="UnRegisterParticipant_Click"/>
-
-                        <Button Content="Boka spel"
-                                Height="25"
-                                Margin="0,0,0,10"
-                                Click="BookGame_Click"/>
-
-                        <Button Content="Avboka spel"
-                                Height="25"
-                                Margin="0,0,0,10"
-                                Click="UnregisterGame_Click"/>
-
-                    </StackPanel>
+                            <Button Content="Avboka spel"
+                        Height="25"
+                        Margin="0,0,0,10"
+                        Command="{Binding GameMeetingVM.UnbookGameCommand}"/>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Grid>
             </TabItem>
 

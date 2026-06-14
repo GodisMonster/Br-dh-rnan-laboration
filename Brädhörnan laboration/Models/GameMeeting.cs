@@ -1,20 +1,22 @@
 ﻿using Brädhörnan_laboration.Enum;
-using Brädhörnan_laboration.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Brädhörnan_laboration.Models;
 
 public class GameMeeting
 {   
+    private GameMeeting()
+    {
+
+    }
     private readonly List<Member> _participants = new();
 
     private readonly List<Game> _plannedGames = new();
-    public int GameMeetingId { get; }
+    [Key]
+    public int GameMeetingId { get; set; }
     public DateTime DateAndTime { get; private set; }
     public string Location { get; private set; } = "";
     public int MaximumNumberOfParticipants { get; private set; }
@@ -78,16 +80,6 @@ public class GameMeeting
             throw new InvalidOperationException(
                 "Medlemmen är inte anmäld till träffen.");
     }
-    //public int GetParticipantCount() // Redundant?
-    //{
-    //    return _participants.Count;
-    //}
-
-    //public IEnumerable<string> GetParticipantNames() // Ej implementerad?
-    //{
-    //        return _participants.Select(
-    //            m => $"{m.FirstName} {m.LastName}");    
-    //}
     public void AddPlannedGame(Game game)
     {
         if (!game.IsAvailableForBooking())

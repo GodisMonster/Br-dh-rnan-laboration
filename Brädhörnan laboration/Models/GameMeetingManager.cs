@@ -1,10 +1,8 @@
 ﻿using Brädhörnan_laboration.Enum;
-using Brädhörnan_laboration.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml.Linq;
+using Brädhörnan_laboration.Models;
 
 namespace Brädhörnan_laboration.Services;
 

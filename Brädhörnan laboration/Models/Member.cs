@@ -1,25 +1,29 @@
 ﻿using Brädhörnan_laboration.Enum;
 using System;
-using System.Diagnostics;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using System.Windows.Markup.Localizer;
 
 
 namespace Brädhörnan_laboration.Models;
 
 public class Member
 {
+    private Member()
+    {
+
+    }
+
     private const int NameMinLength = 2;
     private const int NameMaxLength = 50;
     private const int EmailMaxLength = 254;
     private const int PhoneMaxLength = 20;
 
-    public int MemberNumber { get; }
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
-    public string Email { get; private set; }
-    public string Phone { get; private set; }
+    [Key]
+    public int MemberNumber { get; set; }
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public string Email { get; private set; } = null!;
+    public string Phone { get; private set; } = null!;
     public DateTime RegistrationDate { get; init; }
     public MemberRoleEnum Role { get; private set; }
     public MemberStatusEnum Status { get; private set; }
@@ -34,10 +38,10 @@ public class Member
         MemberRoleEnum role,
         string phone = "")
     {
-        if (memberNumber <= 0) 
-            throw new ArgumentOutOfRangeException(
-                nameof(memberNumber),
-                "Medlemsnummer måste vara positivt");
+        //if (memberNumber <= 0) 
+        //    throw new ArgumentOutOfRangeException(
+        //        nameof(memberNumber),
+        //        "Medlemsnummer måste vara positivt");
 
         MemberNumber = memberNumber;
 

@@ -1,18 +1,19 @@
 ﻿using Brädhörnan_laboration.Enum;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.ComponentModel.DataAnnotations;
 
 namespace Brädhörnan_laboration.Models;
 
 public class Game
 {
-    public int GameId { get; }
+    private Game()
+    {
 
-    public string GameName { get; private set; }
+    }
+    [Key]
+    public int GameId { get; set; }
+
+    public string GameName { get; private set; } = null!;
 
     public int MinimumNumberOfPlayer { get; private set; }
 
@@ -38,8 +39,8 @@ public class Game
         DifficultyLevelEnum difficulty,
         GamegenreEnum genre)
     {
-        if (gameId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(gameId));
+      //  if (gameId <= 0)
+           // throw new ArgumentOutOfRangeException(nameof(gameId));
  
         ValidatePlayerCounts(minPlayers, maxPlayers);
 
@@ -79,15 +80,6 @@ public class Game
         if (max > 16)
             throw new ArgumentOutOfRangeException(nameof(max), "Orimligt många spelare.");
     }
-   //public void UpdateDescription(string description) // Ej implementerad i UI:t
-   // {
-   //    var trimmed = description?.Trim() ?? string.Empty;
-
-   //     if (trimmed.Length > 500)
-   //         throw new ArgumentException(
-   //             "Spelbeskrivningen får inte vara längre än 500 tecken");
-   //     GameDescription = trimmed;
-   // }
     public void UpdateGame(
         string gameName,
         int minPlayers,
@@ -121,28 +113,8 @@ public class Game
 
     public void MarkAsAvailable()
     {
-       if (GameAvailability == GameAvailabilityEnum.Reserved)
-        throw new InvalidOperationException(
-            "Spelet är reserverat för en träff och måste avbokas först");
-
-        GameAvailability = GameAvailabilityEnum.Unavailable;
+        GameAvailability = GameAvailabilityEnum.Available;
     }
-
-    //public void MarkAsUnavailable() // Känns som en redundant funktion.. överväg ta bort
-    //{
-    //    if (GameAvailability == GameAvailabilityEnum.Reserved)
-    //        throw new InvalidOperationException(
-    //            "Spelet är reserverat för en träff och måste avbokas först");
-
-    //    GameAvailability = GameAvailabilityEnum.Unavailable;
-    //}
-
-    //public bool IsSuitableForPlayerCount(int numberOfPlayers) // Ej implementerad
-    //{
-    //    return numberOfPlayers >= MinimumNumberOfPlayer
-    //        && numberOfPlayers <= MaximumNumberOfPlayer;
-    //}
-
     public bool IsAvailableForBooking()
     {
         return GameAvailability == GameAvailabilityEnum.Available;
