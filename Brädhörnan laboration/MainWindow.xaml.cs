@@ -1,6 +1,5 @@
 ﻿using Brädhörnan_laboration.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Brädhörnan_laboration
 {

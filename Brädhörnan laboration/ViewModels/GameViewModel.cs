@@ -1,8 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using Brädhörnan_laboration.Enum;
 using Brädhörnan_laboration.Models;
-using Brädhörnan_laboration.Enum;
 using Brädhörnan_laboration.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Windows;
 

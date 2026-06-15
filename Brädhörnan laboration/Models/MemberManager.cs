@@ -1,7 +1,4 @@
 ﻿using Brädhörnan_laboration.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Brädhörnan_laboration.Models;
 
 

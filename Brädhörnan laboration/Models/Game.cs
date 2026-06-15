@@ -1,5 +1,4 @@
 ﻿using Brädhörnan_laboration.Enum;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Brädhörnan_laboration.Models;
