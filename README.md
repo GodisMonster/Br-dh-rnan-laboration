@@ -1,8 +1,9 @@
 # Brädhörnan laboration
-Ett C#-baserat projekt för att hantera medlemmar, spel och spelträffar för en förening.
-(Laboration 1, 2 & 3) för kursen objektorienterad programmering
+Detta är ett C#-baserat projekt för att hantera medlemmar, spel och spelträffar för en förening.
+Detta projekt gäller för Laboration 1 och 2 i kursen objektorienterad programmering.
 
 ## Funktioner
+Systemet stödjer följande funktioner.
 - Registrera nya medlemmar
 - Uppdatera befintliga medlemmar
 - Ta bort befintliga medlemmar
@@ -14,65 +15,59 @@ Ett C#-baserat projekt för att hantera medlemmar, spel och spelträffar för en
 - Använda LINQ-funktioner för att filtrera medlemmar efter status, sortera i alfabetisk ordning samt gruppera spel efter genre
 
 ## Tekniker
-- C#
-- .NET
+- C# / .NET 8
 - WPF
-- Objektorienterad programmering (OOP)
+- MVVM med CommunityToolkit.Mvvm
+- Entity Framework Core
 - LINQ
-- Enum-typer
+
+  ## Krav
+- Visual Studio 2022
+- .NET 8
+- SQL Server LocalDB
 
 ## Domänmodell
-Projektet bygger främst på följande klasser:
-- `Member.cs`
-- `Game.cs`
-- `GameMeeting.cs`
-- `MemberManager.cs`
-- `GameManager.cs`
-- `GameMeetingManager.cs`
+Projektet bygger på följande domänklasser:
+- `Member.cs` — representerar en föreningsmedlem med namn, email, telefon, roll och status
+- `Game.cs` — representerar ett spel med namn, genre, svårighetsgrad och tillgänglighet
+- `GameMeeting.cs` — representerar en spelträff med datum, plats, eventtyp och max deltagare
+
+Manager-klasser som hanterar domänlogik:
+- `MemberManager.cs` — hanterar medlemsregler och operationer
+- `GameManager.cs` — hanterar spelregler och operationer
+- `GameMeetingManager.cs` — hanterar spelträffsregler och operationer
+
+Service-klasser som hanterar dataåtkomst:
+- `MemberService.cs` — hämtar och sparar medlemmar i databasen
+- `GameService.cs` — hämtar och sparar spel i databasen
+- `GameMeetingService.cs` — hämtar och sparar spelträffar i databasen
 
 ### Relationer
-- Ett `GameMeeting` kan ha flera `Member` som deltagare.
-- Ett `GameMeeting` kan ha flera `Game` som planerade spel.
-- Manager-klasserna ansvarar för skapande, uppdatering, sökning, filtrering och borttagning.
+-## Relationer
+- Ett `GameMeeting` kan ha flera `Member` som deltagare
+- Ett `GameMeeting` kan ha flera `Game` som planerade spel
+- En `GameMeeting` kan ha en ansvarig `Member`
+- Manager-klasserna (`MemberManager`, `GameManager`, `GameMeetingManager`) 
+  ansvarar för domänlogik som skapande, uppdatering, sökning och borttagning
+- Service-klasserna (`MemberService`, `GameService`, `GameMeetingService`) 
+  ansvarar för dataåtkomst mot databasen via Entity Framework Core
 
-## Installation
-1. Klona projektet.
-2. Öppna lösningen i Visual Studio.
-3. Bygg projektet.
-4. Kör applikationen.
+## Installation och start
+1. Klona projektet
+2. Öppna lösningen i Visual Studio 2022
+3. Kontrollera att SQL Server LocalDB är installerat
+4. Kör migrationer i Package Manager Console:
+5. Starta applikationen med F5
+Vid första start laddas demonstrationsdata automatiskt in i databasen med 
+6 medlemmar, 4 spel och 2 spelträffar.
 
-## Användning
-Exempel på hur ett spel läggs till:
-```csharp
-var game = gameManager.AddGame(
-    "Texas Hold'em",
-    2,
-    9,
-    75,
-    DifficultyLevelEnum.Medium,
-    GameGenreEnum.Strategy);
-```
-
-Exempel på hur ett spel uppdateras:
-```csharp
-gameManager.UpdateGame(game, "Texas Hold'em", 2, 9, 75, DifficultyLevelEnum.Hard, GameGenreEnum.Strategy);
-```
-
-Exempel på hur en medlem registreras:
-```csharp
-var member = memberManager.RegisterNewMember(
-    "Franco",
-    "Ortega",
-    "fOrtega@hotmail.com",
-    "073073073",
-    MemberStatusEnum.Active,
-    MemberRoleEnum.Member);
-```
-
-## Projektstruktur
-- `Models/` – Domänklasserna.
-- `Services/` – Manager-klasserna.
-- `ViewModels/` – ViewModel-klasser för WPF (MVVM-mönster).
-- `Enum/` – Roller, status, genre, spelsvårighet och eventtyper.
-- `Data/` – Databaskontext (AppDbContext).
-- `Migrations/` – Databasmigrationer.
+- ## Projektstruktur
+- `Models/` — Domänklasser (`Game`, `Member`, `GameMeeting`) med affärslogik 
+  och validering, samt manager-klasser (`GameManager`, `MemberManager`, 
+  `GameMeetingManager`) som hanterar domänregler
+- `Services/` — Service-klasser (`GameService`, `MemberService`, 
+  `GameMeetingService`) bakom interfaces som hanterar dataåtkomst mot databasen
+- `ViewModels/` — ViewModel-klasser enligt MVVM-mönstret
+- `Data/` — AppDbContext och demodata
+- `Enum/` — Roller, status, genre, spelsvårighet och eventtyper
+- `Migrations/` — Databasmigrationer
