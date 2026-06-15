@@ -56,10 +56,10 @@ Service-klasser som hanterar dataåtkomst:
 1. Klona projektet
 2. Öppna lösningen i Visual Studio 2022
 3. Kontrollera att SQL Server LocalDB är installerat
-4. Kör migrationer i Package Manager Console:
+4. Kör migrationer i Package Manager Console: Update-Database
 5. Starta applikationen med F5
 Vid första start laddas demonstrationsdata automatiskt in i databasen med 
-6 medlemmar, 4 spel och 2 spelträffar.
+ medlemmar,  spel och  spelträffar.
 
 - ## Projektstruktur
 - `Models/` — Domänklasser (`Game`, `Member`, `GameMeeting`) med affärslogik 
